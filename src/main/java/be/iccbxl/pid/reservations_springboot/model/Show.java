@@ -4,25 +4,28 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Column;
-
 import com.github.slugify.Slugify;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 @Entity
-@Table(name="shows")
+@Table(name = "shows")
 public class Show {
+
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String slug;
 
     private String title;
@@ -31,41 +34,40 @@ public class Show {
     @ManyToMany(mappedBy = "shows")
     private List<ArtistType> artistTypes = new ArrayList<>();
 
-    @Column(name="poster_url")
+    @Column(name = "poster_url")
     private String posterUrl;
 
     /**
      * Lieu de création du spectacle
      */
     @ManyToOne
-    @JoinColumn(name="location_id", nullable=true)
+    @JoinColumn(name = "location_id", nullable = true)
     private Location location;
 
     private boolean bookable;
+
+    // NOTE: ce champ devra probablement être supprimé plus tard (pas dans le schéma DB)
     private double price;
 
     /**
      * Date de création du spectacle
      */
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     /**
      * Date de modification du spectacle
      */
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(targetEntity=Representation.class, mappedBy="show")
+    @OneToMany(mappedBy = "show")
     private List<Representation> representations = new ArrayList<>();
 
+    public Show() {}
 
-    public Show() { }
-
-    public Show(String title, String description, String posterUrl, Location location, boolean bookable,
-                double price) {
+    public Show(String title, String description, String posterUrl, Location location, boolean bookable, double price) {
         Slugify slg = new Slugify();
-
         this.slug = slg.slugify(title);
         this.title = title;
         this.description = description;
@@ -76,7 +78,6 @@ public class Show {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = null;
     }
-
 
     public Long getId() {
         return id;
@@ -96,9 +97,7 @@ public class Show {
 
     public void setTitle(String title) {
         this.title = title;
-
         Slugify slg = new Slugify();
-
         this.setSlug(slg.slugify(title));
     }
 
@@ -123,9 +122,9 @@ public class Show {
     }
 
     public void setLocation(Location location) {
-        this.location.removeShow(this);	//déménager de l’ancien lieu
+        this.location.removeShow(this); // déménager de l’ancien lieu
         this.location = location;
-        this.location.addShow(this);		//emménager dans le nouveau lieu
+        this.location.addShow(this); // emménager dans le nouveau lieu
     }
 
     public boolean isBookable() {
@@ -156,35 +155,25 @@ public class Show {
         return createdAt;
     }
 
-    @Override
-    public String toString() {
-        return "Show [id=" + id + ", slug=" + slug + ", title=" + title
-                + ", description=" + description + ", posterUrl=" + posterUrl + ", location="
-                + location + ", bookable=" + bookable + ", price=" + price
-                + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
-    }
-
     public List<Representation> getRepresentations() {
         return representations;
     }
 
     public Show addRepresentation(Representation representation) {
-        if(!this.representations.contains(representation)) {
+        if (!this.representations.contains(representation)) {
             this.representations.add(representation);
             representation.setShow(this);
         }
-
         return this;
     }
 
     public Show removeRepresentation(Representation representation) {
-        if(this.representations.contains(representation)) {
+        if (this.representations.contains(representation)) {
             this.representations.remove(representation);
-            if(representation.getLocation().equals(this)) {
+            if (representation.getLocation() != null && representation.getLocation().equals(this)) {
                 representation.setLocation(null);
             }
         }
-
         return this;
     }
 
@@ -196,20 +185,18 @@ public class Show {
     }
 
     public Show addArtistType(ArtistType artistType) {
-        if(!this.artistTypes.contains(artistType)) {
+        if (!this.artistTypes.contains(artistType)) {
             this.artistTypes.add(artistType);
             artistType.addShow(this);
         }
-
         return this;
     }
 
     public Show removeArtistType(ArtistType artistType) {
-        if(this.artistTypes.contains(artistType)) {
+        if (this.artistTypes.contains(artistType)) {
             this.artistTypes.remove(artistType);
             artistType.getShows().remove(this);
         }
-
         return this;
     }
 
