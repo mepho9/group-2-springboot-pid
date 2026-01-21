@@ -1,0 +1,39 @@
+### 1) GET all artists (public)
+GET http://localhost:8080/api/artists
+Accept: application/json
+
+###
+
+### 2) GET one artist (public)
+GET http://localhost:8080/api/artists/1
+Accept: application/json
+
+###
+
+### 3) POST create artist (ADMIN only - Basic Auth)
+POST http://localhost:8080/api/admin/artists
+Content-Type: application/json
+Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+
+{
+  "firstname": "Ada",
+  "lastname": "Lovelace"
+}
+
+###
+
+### 4) PUT update artist (ADMIN only - Basic Auth)
+PUT http://localhost:8080/api/admin/artists/1
+Content-Type: application/json
+Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+
+{
+  "firstname": "Updated",
+  "lastname": "Artist"
+}
+
+###
+
+### 5) DELETE artist (ADMIN only - Basic Auth)
+DELETE http://localhost:8080/api/admin/artists/1
+Authorization: Basic YWRtaW46cGFzc3dvcmQ=
