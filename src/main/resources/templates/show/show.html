@@ -9,38 +9,78 @@
     <div layout:fragment="content">
         <h1 th:text="${show.title}">Ayiti</h1>
 
-        //…
+        <!-- Infos MVP -->
+        <p th:if="${show.description != null}" th:text="${show.description}">
+            Description du spectacle...
+        </p>
+
+        <p>
+            <strong>Réservable :</strong>
+            <span th:text="${show.bookable ? 'Oui' : 'Non'}">Oui</span>
+        </p>
+
+        <p th:if="${show.bookable}">
+            <strong>Prix :</strong>
+            <span th:text="${show.price} + ' €'">9.99 €</span>
+        </p>
+
+        <hr/>
+
         <h2>Liste des représentations</h2>
-        <ul th:if="${#lists.size(show.representations)>=1}">
+        <ul th:if="${#lists.size(show.representations) >= 1}">
             <li th:each="representation : ${show.representations}"
-                th:text="${#temporals.format(representation.when,'dd-MM-yyyy HH:mm')}">12-10-2012 13:30</li>
+                th:text="${#temporals.format(representation.when,'dd-MM-yyyy HH:mm')}">
+                12-10-2012 13:30
+            </li>
         </ul>
-        <p th:if="${#lists.size(show.representations)==0}">Aucune représentation</p>
+        <p th:if="${#lists.size(show.representations) == 0}">
+            Aucune représentation
+        </p>
+
+        <hr/>
 
         <h2>Liste des artistes</h2>
-        <p><strong>Auteur:</strong>
+
+        <p th:if="${collaborateurs != null and collaborateurs['auteur'] != null}">
+            <strong>Auteur :</strong>
             <span th:each="auteur,iter : ${collaborateurs['auteur']}"
-                  th:text="${auteur.firstname}+' '+${auteur.lastname}
-		        	+ (${iter.count}==${iter.size}-1 ? ' et ':(${iter.last}?'':', '))">
-	            	Firstname Lastname
-	        	</span>
+                  th:text="${auteur.firstname} + ' ' + ${auteur.lastname}
+                    + (${iter.count}==${iter.size}-1 ? ' et ' : (${iter.last} ? '' : ', '))">
+                Firstname Lastname
+            </span>
         </p>
-        <p><strong>Metteur en scène:</strong>
-            <span th:each="scenographe,iter : ${collaborateurs['scénographe']}"
-                  th:text="${scenographe.firstname}+' '+${scenographe.lastname}
-	        		+ (${iter.count}==${iter.size}-1 ? ' et ':(${iter.last}?'':', '))">
-	            	Firstname Lastname
-	        	</span>
-        </p>
-        <p><strong>Distribution:</strong>
-            <span th:each="comedien,iter : ${collaborateurs['comédien']}"
-                  th:text="${comedien.firstname}+' '+${comedien.lastname}
-	        		+ (${iter.count}==${iter.size}-1 ? ' et ':(${iter.last}?'':', '))">
-	            	Firstname Lastname
-	        	</span>
+        <p th:if="${collaborateurs == null or collaborateurs['auteur'] == null}">
+            <strong>Auteur :</strong> <em>Non renseigné</em>
         </p>
 
-        <nav><a th:href="@{/shows}">Retour à l'index</a></nav>
+        <p th:if="${collaborateurs != null and collaborateurs['scénographe'] != null}">
+            <strong>Metteur en scène :</strong>
+            <span th:each="scenographe,iter : ${collaborateurs['scénographe']}"
+                  th:text="${scenographe.firstname} + ' ' + ${scenographe.lastname}
+                    + (${iter.count}==${iter.size}-1 ? ' et ' : (${iter.last} ? '' : ', '))">
+                Firstname Lastname
+            </span>
+        </p>
+        <p th:if="${collaborateurs == null or collaborateurs['scénographe'] == null}">
+            <strong>Metteur en scène :</strong> <em>Non renseigné</em>
+        </p>
+
+        <p th:if="${collaborateurs != null and collaborateurs['comédien'] != null}">
+            <strong>Distribution :</strong>
+            <span th:each="comedien,iter : ${collaborateurs['comédien']}"
+                  th:text="${comedien.firstname} + ' ' + ${comedien.lastname}
+                    + (${iter.count}==${iter.size}-1 ? ' et ' : (${iter.last} ? '' : ', '))">
+                Firstname Lastname
+            </span>
+        </p>
+        <p th:if="${collaborateurs == null or collaborateurs['comédien'] == null}">
+            <strong>Distribution :</strong> <em>Non renseignée</em>
+        </p>
+
+        <hr/>
+        <nav>
+            <a th:href="@{/shows}">Retour au catalogue</a>
+        </nav>
     </div>
 </div>
 </body>
