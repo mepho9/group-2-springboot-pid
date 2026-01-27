@@ -37,12 +37,10 @@ public class ShowController {
     public String show(Model model, @PathVariable("id") Long id) {
         Show show = service.get(id);
 
-        // Sécurité MVP : si pas trouvé -> page 404 simple
         if (show == null) {
             return "redirect:/shows";
         }
 
-        // Récupérer les artistes du spectacle et les grouper par type
         Map<String, ArrayList<Artist>> collaborateurs = new TreeMap<>();
 
         for (ArtistType at : show.getArtistTypes()) {
