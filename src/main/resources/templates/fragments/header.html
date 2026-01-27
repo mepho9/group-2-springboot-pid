@@ -15,32 +15,16 @@
           <ul class="nav navbar-nav">
             <li th:classappend="${module == 'home' ? 'active' : ''}">
               <a href="#" th:href="@{/}">Home</a>
+            <li th:classappend="${module == 'shows' ? 'active' : ''}">
+              <a href="#" th:href="@{/shows}">Shows</a>
+            </li>
+
             </li>
             <li th:classappend="${module == 'artists' ? 'active' : ''}">
               <a href="#" th:href="@{/artists}">Artists</a>
             </li>
           </ul>
         </div>
-        <nav>
-          <a th:href="@{/}">Home</a> |
-          <a th:href="@{/shows}">Shows</a> |
-          <a th:href="@{/representations}">Representations</a> |
-          <a th:href="@{/artists}">Artists</a>
-
-          <span style="float:right;">
-    <span th:if="${#authorization.expression('isAuthenticated()')}">
-      <a th:href="@{/profile}">Profile</a>
-      <form th:action="@{/logout}" method="post" style="display:inline;">
-        <button type="submit">Logout</button>
-      </form>
-    </span>
-
-    <span th:if="${#authorization.expression('isAnonymous()')}">
-      <a th:href="@{/login}">Login</a>
-    </span>
-  </span>
-        </nav>
-        <hr/>
 
 
         <div style="float:right">
