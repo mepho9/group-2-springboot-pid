@@ -14,14 +14,15 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li th:classappend="${module == 'home' ? 'active' : ''}">
-              <a href="#" th:href="@{/}">Home</a>
-            <li th:classappend="${module == 'shows' ? 'active' : ''}">
-              <a href="#" th:href="@{/shows}">Shows</a>
+              <a th:href="@{/}">Home</a>
             </li>
 
+            <li th:classappend="${module == 'shows' ? 'active' : ''}">
+              <a th:href="@{/shows}">Shows</a>
             </li>
+
             <li th:classappend="${module == 'artists' ? 'active' : ''}">
-              <a href="#" th:href="@{/artists}">Artists</a>
+              <a th:href="@{/artists}">Artists</a>
             </li>
           </ul>
         </div>
