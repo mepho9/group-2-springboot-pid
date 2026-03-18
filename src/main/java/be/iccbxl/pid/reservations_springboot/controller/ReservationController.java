@@ -39,6 +39,22 @@ public class ReservationController {
     @Autowired
     private PriceRepository priceRepository;
 
+    @GetMapping("/reservations")
+    public String index(Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        User user = userRepository.findByLogin(principal.getName());
+        List<Reservation> reservations = reservationRepository.findByUser(user);
+
+        model.addAttribute("reservations", reservations);
+        model.addAttribute("title", "Mes réservations");
+        model.addAttribute("module", "reservations");
+
+        return "reservation/index";
+    }
+
     @GetMapping("/representations/{id}/reserve")
     public String createReservationForm(@PathVariable("id") Long id, Model model) {
         Representation representation = representationService.get(id);

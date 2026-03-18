@@ -43,6 +43,7 @@
             <p>Bonjour <span sec:authentication="principal.username">Bob</span>!</p>
             <p><a th:href="@{/profile}">Mon profil</a></p>
             <form th:action="@{/logout}" method="post" class="nav-link">
+              <p><a th:href="@{/reservations}">Mes réservations</a></p>
               <button class="unset">Se déconnecter</button>
             </form>
           </div>

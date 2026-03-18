@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<head>
+    <title>Mes réservations</title>
+</head>
+<body>
+<div class="container">
+    <div layout:fragment="content">
+        <h1 th:text="${title}">Mes réservations</h1>
+
+        <p th:if="${#lists.isEmpty(reservations)}">
+            Vous n'avez encore aucune réservation.
+        </p>
+
+        <table th:unless="${#lists.isEmpty(reservations)}" border="1" cellpadding="6">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date réservation</th>
+                <th>Statut</th>
+                <th>Spectacle</th>
+                <th>Quantité</th>
+                <th>Tarif</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="reservation : ${reservations}">
+                <td th:text="${reservation.id}">1</td>
+                <td th:text="${#temporals.format(reservation.bookingDate, 'dd/MM/yyyy HH:mm')}">01/01/2026 20:00</td>
+                <td th:text="${reservation.status}">PENDING</td>
+
+                <td>
+                    <span th:if="${!#lists.isEmpty(reservation.representationReservations)}"
+                          th:text="${reservation.representationReservations[0].representation.show.title}">
+                        Titre du spectacle
+                    </span>
+                </td>
+
+                <td>
+                    <span th:if="${!#lists.isEmpty(reservation.representationReservations)}"
+                          th:text="${reservation.representationReservations[0].quantity}">
+                        1
+                    </span>
+                </td>
+
+                <td>
+                    <span th:if="${!#lists.isEmpty(reservation.representationReservations)}"
+                          th:text="${reservation.representationReservations[0].price.price + ' €'}">
+                        10 €
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
