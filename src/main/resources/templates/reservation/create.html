@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<head>
+    <title>Réserver une représentation</title>
+</head>
+<body>
+<div class="container">
+    <div layout:fragment="content">
+        <h1 th:text="${title}">Réserver une représentation</h1>
+
+        <p>
+            <strong>Spectacle :</strong>
+            <span th:text="${representation.show.title}">Titre du spectacle</span>
+        </p>
+
+        <p>
+            <strong>Date :</strong>
+            <span th:text="${date}">2026-01-01</span>
+        </p>
+
+        <p>
+            <strong>Heure :</strong>
+            <span th:text="${heure}">20:00</span>
+        </p>
+
+        <form method="post" th:action="@{/reservations}">
+            <input type="hidden" name="representationId" th:value="${representation.id}" />
+
+            <div>
+                <label for="quantity">Quantité</label>
+                <input id="quantity" type="number" name="quantity" min="1" value="1" required />
+            </div>
+
+            <button type="submit">Confirmer la réservation</button>
+        </form>
+
+        <p>
+            <a th:href="@{/representations/{id}(id=${representation.id})}">
+                Retour à la représentation
+            </a>
+        </p>
+    </div>
+</div>
+</body>
+</html>
