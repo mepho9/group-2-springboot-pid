@@ -28,6 +28,17 @@
             <input type="hidden" name="representationId" th:value="${representation.id}" />
 
             <div>
+                <label for="priceId">Tarif</label>
+                <select id="priceId" name="priceId" required>
+                    <option th:each="price : ${prices}"
+                            th:value="${price.id}"
+                            th:text="${price.type + ' - ' + price.price + ' €'}">
+                        Standard - 10 €
+                    </option>
+                </select>
+            </div>
+
+            <div>
                 <label for="quantity">Quantité</label>
                 <input id="quantity" type="number" name="quantity" min="1" value="1" required />
             </div>

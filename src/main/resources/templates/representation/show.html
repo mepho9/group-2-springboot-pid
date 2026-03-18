@@ -11,6 +11,8 @@
             <h1 th:text="'Représentation du ' + ${date} + ' à ' + ${heure}">
                 Représentation du 15/01/2020 à 13:30
             </h1>
+            <p th:if="${success}" th:text="${success}" style="color:green"></p>
+            <p th:if="${error}" th:text="${error}" style="color:red"></p>
 
             <p>
                 <strong>Spectacle :</strong>
