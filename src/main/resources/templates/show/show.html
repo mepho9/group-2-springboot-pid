@@ -4,6 +4,17 @@
 <head>
     <title>Fiche d'un spectacle</title>
 </head>
+<div sec:authorize="isAuthenticated()">
+    <form th:action="@{/reservation-placeholder}" method="get">
+        <button type="submit">Réserver</button>
+    </form>
+</div>
+
+<div sec:authorize="!isAuthenticated()">
+    <p>
+        <a th:href="@{/login}">Connectez-vous pour réserver</a>
+    </p>
+</div>
 <body>
 <div class="container">
     <div layout:fragment="content">
