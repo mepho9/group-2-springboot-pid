@@ -15,9 +15,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import java.security.Principal;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import be.iccbxl.pid.reservations_springboot.model.Review;
+import be.iccbxl.pid.reservations_springboot.model.User;
+import be.iccbxl.pid.reservations_springboot.repository.ReviewRepository;
+import be.iccbxl.pid.reservations_springboot.repository.UserRepository;
 
 @Controller
 public class ShowController {
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ShowService service;
@@ -56,5 +70,30 @@ public class ShowController {
         model.addAttribute("module", "shows");
 
         return "show/show";
+    }
+    @PostMapping("/shows/{id}/reviews")
+    public String storeReview(@PathVariable("id") Long id,
+                              @RequestParam("stars") Integer stars,
+                              @RequestParam("review") String reviewText,
+                              Principal principal) {
+
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        Show show = service.get(id);
+        if (show == null) {
+            return "redirect:/shows";
+        }
+
+        User user = userRepository.findByLogin(principal.getName());
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        Review review = new Review(user, show, reviewText, stars);
+        reviewRepository.save(review);
+
+        return "redirect:/shows/" + id;
     }
 }
