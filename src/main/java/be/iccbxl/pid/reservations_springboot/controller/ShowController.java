@@ -25,6 +25,7 @@ import be.iccbxl.pid.reservations_springboot.repository.ReviewRepository;
 import be.iccbxl.pid.reservations_springboot.repository.UserRepository;
 import java.util.List;
 import be.iccbxl.pid.reservations_springboot.model.Review;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ShowController {
@@ -94,7 +95,8 @@ public class ShowController {
     public String storeReview(@PathVariable("id") Long id,
                               @RequestParam("stars") Integer stars,
                               @RequestParam("review") String reviewText,
-                              Principal principal) {
+                              Principal principal,
+                              org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
 
         if (principal == null) {
             return "redirect:/login";
@@ -110,9 +112,25 @@ public class ShowController {
             return "redirect:/login";
         }
 
-        Review review = new Review(user, show, reviewText, stars);
+        if (stars == null || stars < 1 || stars > 5) {
+            redirectAttributes.addFlashAttribute("errorReview", "La note doit être comprise entre 1 et 5.");
+            return "redirect:/shows/" + id;
+        }
+
+        if (reviewText == null || reviewText.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorReview", "Le commentaire est obligatoire.");
+            return "redirect:/shows/" + id;
+        }
+
+        if (reviewText.trim().length() < 5) {
+            redirectAttributes.addFlashAttribute("errorReview", "Le commentaire doit contenir au moins 5 caractères.");
+            return "redirect:/shows/" + id;
+        }
+
+        Review review = new Review(user, show, reviewText.trim(), stars);
         reviewRepository.save(review);
 
+        redirectAttributes.addFlashAttribute("successReview", "Votre avis a bien été enregistré.");
         return "redirect:/shows/" + id;
     }
 }
