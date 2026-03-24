@@ -93,6 +93,8 @@
         <hr/>
 
         <h2>Donner un avis</h2>
+        <p th:if="${successReview}" th:text="${successReview}" style="color:green"></p>
+        <p th:if="${errorReview}" th:text="${errorReview}" style="color:red"></p>
 
         <div sec:authorize="isAuthenticated()">
             <form method="post" th:action="@{/shows/{id}/reviews(id=${show.id})}">
