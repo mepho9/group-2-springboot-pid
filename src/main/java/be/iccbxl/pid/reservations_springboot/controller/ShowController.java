@@ -126,6 +126,10 @@ public class ShowController {
             redirectAttributes.addFlashAttribute("errorReview", "Le commentaire doit contenir au moins 5 caractères.");
             return "redirect:/shows/" + id;
         }
+        if (reviewRepository.existsByUserAndShow(user, show)) {
+            redirectAttributes.addFlashAttribute("errorReview", "Vous avez déjà laissé un avis pour ce spectacle.");
+            return "redirect:/shows/" + id;
+        }
 
         Review review = new Review(user, show, reviewText.trim(), stars);
         reviewRepository.save(review);
