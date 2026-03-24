@@ -31,6 +31,8 @@ public class SpringSecurityConfig {
 								"/forgot-password", "/reset-password",
 								"/reset-success", "/register"
 						).permitAll()
+						.requestMatchers("/reservations/**").authenticated()
+						.requestMatchers("/representations/*/reserve").authenticated()
 						.requestMatchers("/admin").hasRole("ADMIN")
 						.requestMatchers("/user").hasRole("MEMBER")
 						.anyRequest().authenticated()
