@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/main}">
 <head>
     <title>Fiche d'une représentation</title>
@@ -11,6 +12,7 @@
             <h1 th:text="'Représentation du ' + ${date} + ' à ' + ${heure}">
                 Représentation du 15/01/2020 à 13:30
             </h1>
+
             <p th:if="${success}" th:text="${success}" style="color:green"></p>
             <p th:if="${error}" th:text="${error}" style="color:red"></p>
 
@@ -34,11 +36,19 @@
                 </em>
             </p>
 
-            <p>
-                <a th:href="@{/representations/{id}/reserve(id=${representation.id})}">
-                    Réserver cette représentation
-                </a>
-            </p>
+            <div sec:authorize="isAuthenticated()">
+                <p>
+                    <a th:href="@{/representations/{id}/reserve(id=${representation.id})}">
+                        Réserver cette représentation
+                    </a>
+                </p>
+            </div>
+
+            <div sec:authorize="!isAuthenticated()">
+                <p>
+                    <a th:href="@{/login}">Connectez-vous pour réserver</a>
+                </p>
+            </div>
         </article>
 
         <nav>
