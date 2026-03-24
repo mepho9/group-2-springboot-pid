@@ -1,20 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/main}">
 <head>
     <title>Fiche d'un spectacle</title>
 </head>
-<div sec:authorize="isAuthenticated()">
-    <form th:action="@{/reservation-placeholder}" method="get">
-        <button type="submit">Réserver</button>
-    </form>
-</div>
-
-<div sec:authorize="!isAuthenticated()">
-    <p>
-        <a th:href="@{/login}">Connectez-vous pour réserver</a>
-    </p>
-</div>
 <body>
 <div class="container">
     <div layout:fragment="content">
@@ -34,6 +24,18 @@
             <strong>Prix :</strong>
             <span th:text="${show.price} + ' €'">9.99 €</span>
         </p>
+
+        <div sec:authorize="isAuthenticated()">
+            <form th:action="@{/reservation-placeholder}" method="get">
+                <button type="submit">Réserver</button>
+            </form>
+        </div>
+
+        <div sec:authorize="!isAuthenticated()">
+            <p>
+                <a th:href="@{/login}">Connectez-vous pour réserver</a>
+            </p>
+        </div>
 
         <hr/>
 
@@ -87,6 +89,38 @@
         <p th:if="${collaborateurs == null or collaborateurs['comédien'] == null}">
             <strong>Distribution :</strong> <em>Non renseignée</em>
         </p>
+
+        <hr/>
+
+        <h2>Donner un avis</h2>
+
+        <div sec:authorize="isAuthenticated()">
+            <form method="post" th:action="@{/shows/{id}/reviews(id=${show.id})}">
+                <div>
+                    <label for="stars">Note</label>
+                    <select id="stars" name="stars" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="review">Commentaire</label>
+                    <textarea id="review" name="review" required></textarea>
+                </div>
+
+                <button type="submit">Envoyer l'avis</button>
+            </form>
+        </div>
+
+        <div sec:authorize="!isAuthenticated()">
+            <p>
+                <a th:href="@{/login}">Connectez-vous pour laisser un avis</a>
+            </p>
+        </div>
 
         <hr/>
         <nav>
