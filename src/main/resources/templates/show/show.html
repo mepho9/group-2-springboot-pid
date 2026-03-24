@@ -123,6 +123,30 @@
         </div>
 
         <hr/>
+        <hr>
+
+        <h2>Avis des utilisateurs</h2>
+
+        <p th:if="${#lists.isEmpty(reviews)}">
+            Aucun avis pour le moment.
+        </p>
+
+        <div th:unless="${#lists.isEmpty(reviews)}">
+            <div th:each="review : ${reviews}" style="margin-bottom: 1em; border: 1px solid #ccc; padding: 10px;">
+                <p>
+                    <strong th:text="${review.user.login}">username</strong>
+                    — <span th:text="${review.stars}">5</span>/5
+                </p>
+
+                <p th:text="${review.review}">
+                    Très bon spectacle !
+                </p>
+
+                <small th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy HH:mm')}">
+                    01/01/2026 20:00
+                </small>
+            </div>
+        </div>
         <nav>
             <a th:href="@{/shows}">Retour au catalogue</a>
         </nav>

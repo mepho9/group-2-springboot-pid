@@ -23,6 +23,8 @@ import be.iccbxl.pid.reservations_springboot.model.Review;
 import be.iccbxl.pid.reservations_springboot.model.User;
 import be.iccbxl.pid.reservations_springboot.repository.ReviewRepository;
 import be.iccbxl.pid.reservations_springboot.repository.UserRepository;
+import java.util.List;
+import be.iccbxl.pid.reservations_springboot.model.Review;
 
 @Controller
 public class ShowController {
@@ -36,15 +38,32 @@ public class ShowController {
     @Autowired
     private ShowService service;
 
-    @GetMapping("/shows")
-    public String index(Model model) {
-        List<Show> shows = service.getAll();
+    @GetMapping("/shows/{id}")
+    public String show(Model model, @PathVariable("id") Long id) {
+        Show show = service.get(id);
 
-        model.addAttribute("shows", shows);
-        model.addAttribute("title", "Liste des spectacles");
+        if (show == null) {
+            return "redirect:/shows";
+        }
+
+        Map<String, ArrayList<Artist>> collaborateurs = new TreeMap<>();
+
+        for (ArtistType at : show.getArtistTypes()) {
+            String type = at.getType().getType();
+
+            collaborateurs.computeIfAbsent(type, k -> new ArrayList<>());
+            collaborateurs.get(type).add(at.getArtist());
+        }
+
+        List<Review> reviews = reviewRepository.findByShow(show);
+
+        model.addAttribute("collaborateurs", collaborateurs);
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("show", show);
+        model.addAttribute("title", "Fiche d'un spectacle");
         model.addAttribute("module", "shows");
 
-        return "show/index";
+        return "show/show";
     }
 
     @GetMapping("/shows/{id}")
