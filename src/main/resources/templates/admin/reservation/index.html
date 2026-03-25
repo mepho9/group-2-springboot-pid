@@ -59,7 +59,27 @@
                     </span>
                 </td>
 
-                <td th:text="${reservation.status}">PENDING</td>
+                <td>
+    <span th:if="${reservation.status == 'PENDING'}"
+          style="color:orange; font-weight:bold;">
+        PENDING
+    </span>
+
+                    <span th:if="${reservation.status == 'CONFIRMED'}"
+                          style="color:green; font-weight:bold;">
+        CONFIRMED
+    </span>
+
+                    <span th:if="${reservation.status == 'CANCELLED'}"
+                          style="color:red; font-weight:bold;">
+        CANCELLED
+    </span>
+
+                    <span th:if="${reservation.status != 'PENDING' and reservation.status != 'CONFIRMED' and reservation.status != 'CANCELLED'}"
+                          th:text="${reservation.status}">
+        STATUS
+    </span>
+                </td>
                 <td>
                     <form th:if="${reservation.status == 'PENDING'}"
                           th:action="@{/admin/reservations/{id}/confirm(id=${reservation.id})}"
