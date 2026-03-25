@@ -35,6 +35,7 @@ public class SpringSecurityConfig {
 						.requestMatchers("/representations/*/reserve").authenticated()
 						.requestMatchers("/admin").hasRole("ADMIN")
 						.requestMatchers("/user").hasRole("MEMBER")
+						.requestMatchers("/admin/reviews").hasRole("ADMIN")
 						.anyRequest().authenticated()
 				)
 				.formLogin(form -> form

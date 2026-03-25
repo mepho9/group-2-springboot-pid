@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<head>
+    <title>Avis à valider</title>
+</head>
+<body>
+<div class="container">
+    <div layout:fragment="content">
+        <h1 th:text="${title}">Avis à valider</h1>
+
+        <p th:if="${#lists.isEmpty(reviews)}">
+            Aucun avis en attente de validation.
+        </p>
+
+        <table th:unless="${#lists.isEmpty(reviews)}" border="1" cellpadding="6">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Utilisateur</th>
+                <th>Spectacle</th>
+                <th>Note</th>
+                <th>Commentaire</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="review : ${reviews}">
+                <td th:text="${review.id}">1</td>
+                <td th:text="${review.user.login}">user</td>
+                <td th:text="${review.show.title}">Show</td>
+                <td th:text="${review.stars}">5</td>
+                <td th:text="${review.review}">Très bon spectacle</td>
+                <td th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2026 20:00</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
