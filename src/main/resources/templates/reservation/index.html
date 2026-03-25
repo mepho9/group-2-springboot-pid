@@ -91,7 +91,22 @@
             <tr th:each="reservation : ${reservations}">
                 <td th:text="${reservation.id}">1</td>
                 <td th:text="${#temporals.format(reservation.bookingDate, 'dd/MM/yyyy HH:mm')}">01/01/2026 20:00</td>
-                <td th:text="${reservation.status}">PENDING</td>
+                <td>
+    <span th:if="${reservation.status == 'PENDING'}"
+          style="color:orange; font-weight:bold;">
+        PENDING
+    </span>
+
+                    <span th:if="${reservation.status == 'CANCELLED'}"
+                          style="color:red; font-weight:bold;">
+        CANCELLED
+    </span>
+
+                    <span th:if="${reservation.status != 'PENDING' and reservation.status != 'CANCELLED'}"
+                          th:text="${reservation.status}">
+        STATUS
+    </span>
+                </td>
 
                 <td>
                     <span th:if="${!#lists.isEmpty(reservation.representationReservations)}"
