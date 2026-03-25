@@ -20,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ReservationController {
@@ -107,5 +109,28 @@ public class ReservationController {
 
         redirectAttributes.addFlashAttribute("success", "Réservation enregistrée avec succès.");
         return "redirect:/representations/" + representationId;
+    }
+    @PostMapping("/reservations/{id}/cancel")
+    public String cancelReservation(@PathVariable("id") Long id,
+                                    Principal principal,
+                                    RedirectAttributes redirectAttributes) {
+
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        User user = userRepository.findByLogin(principal.getName());
+        Reservation reservation = reservationRepository.findById(id).orElse(null);
+
+        if (reservation == null || user == null || !reservation.getUser().getId().equals(user.getId())) {
+            redirectAttributes.addFlashAttribute("error", "Impossible d'annuler cette réservation.");
+            return "redirect:/reservations";
+        }
+
+        reservation.setStatus("CANCELLED");
+        reservationRepository.save(reservation);
+
+        redirectAttributes.addFlashAttribute("success", "Réservation annulée avec succès.");
+        return "redirect:/reservations";
     }
 }

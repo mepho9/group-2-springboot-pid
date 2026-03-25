@@ -8,6 +8,8 @@
 <div class="container">
     <div layout:fragment="content">
         <h1 th:text="${title}">Mes réservations</h1>
+        <p th:if="${success}" th:text="${success}" style="color:green"></p>
+        <p th:if="${error}" th:text="${error}" style="color:red"></p>
 
         <p th:if="${#lists.isEmpty(reservations)}">
             Vous n'avez encore aucune réservation.
@@ -23,6 +25,7 @@
                 <th>Quantité</th>
                 <th>Tarif</th>
                 <th>Total</th>
+                <th>Action</th>
             </tr><table th:unless="${#lists.isEmpty(reservations)}" border="1" cellpadding="6">
                 <thead>
                 <tr>
@@ -71,6 +74,14 @@
                   th:text="${reservation.representationReservations[0].price.price + ' €'}">
                 10 €
             </span>
+                    </td>
+                    <td>
+                        <form th:if="${reservation.status != 'CANCELLED'}"
+                              th:action="@{/reservations/{id}/cancel(id=${reservation.id})}"
+                              method="post"
+                              onsubmit="return confirm('Annuler cette réservation ?');">
+                            <button type="submit">Annuler</button>
+                        </form>
                     </td>
                 </tr>
                 </tbody>
