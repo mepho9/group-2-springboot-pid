@@ -8,6 +8,8 @@
 <div class="container">
     <div layout:fragment="content">
         <h1 th:text="${title}">Avis à valider</h1>
+        <p th:if="${success}" th:text="${success}" style="color:green"></p>
+        <p th:if="${error}" th:text="${error}" style="color:red"></p>
 
         <p th:if="${#lists.isEmpty(reviews)}">
             Aucun avis en attente de validation.
@@ -22,6 +24,7 @@
                 <th>Note</th>
                 <th>Commentaire</th>
                 <th>Date</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -32,6 +35,11 @@
                 <td th:text="${review.stars}">5</td>
                 <td th:text="${review.review}">Très bon spectacle</td>
                 <td th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2026 20:00</td>
+                <td>
+                    <form th:action="@{/admin/reviews/{id}/validate(id=${review.id})}" method="post">
+                        <button type="submit">Valider</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
