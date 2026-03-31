@@ -48,4 +48,11 @@ public class ShowService {
     public List<Show> getFromLocation(Location location) {
         return repository.findByLocation(location);
     }
+
+    public List<Show> getAllSorted(String sort) {
+        if ("desc".equalsIgnoreCase(sort)) {
+            return repository.findAllByOrderByTitleDesc();
+        }
+        return repository.findAllByOrderByTitleAsc();
+    }
 }

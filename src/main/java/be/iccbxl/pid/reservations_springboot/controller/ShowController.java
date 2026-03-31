@@ -138,12 +138,18 @@ public class ShowController {
         return "redirect:/shows/" + id;
     }
     @GetMapping("/shows")
-    public String index(@RequestParam(value = "search", required = false) String search, Model model) {
+    public String index(@RequestParam(value = "search", required = false) String search,
+                        @RequestParam(value = "sort", required = false) String sort,
+                        Model model) {
+
         List<Show> shows;
 
         if (search != null && !search.trim().isEmpty()) {
             shows = service.searchByTitle(search.trim());
             model.addAttribute("search", search);
+        } else if (sort != null && !sort.trim().isEmpty()) {
+            shows = service.getAllSorted(sort);
+            model.addAttribute("sort", sort);
         } else {
             shows = service.getAll();
         }

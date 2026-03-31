@@ -7,4 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ShowRepository extends JpaRepository<Show, Long> {
     List<Show> findByTitleContainingIgnoreCase(String title);
+
+    List<Show> findAllByOrderByTitleAsc();
+    List<Show> findAllByOrderByTitleDesc();
+
 }
