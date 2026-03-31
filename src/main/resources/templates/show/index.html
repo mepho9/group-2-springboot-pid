@@ -8,6 +8,12 @@
 <div class="container">
     <div layout:fragment="content">
         <h1 th:text="${title}">Liste des spectacles</h1>
+
+        <form th:action="@{/shows}" method="get">
+            <input type="text" name="search" th:value="${search}" placeholder="Rechercher un spectacle">
+            <button type="submit">Rechercher</button>
+        </form>
+
         <p th:if="${#lists.isEmpty(shows)}">
             Aucun spectacle disponible pour le moment.
         </p>

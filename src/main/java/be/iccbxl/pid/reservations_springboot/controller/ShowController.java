@@ -137,4 +137,21 @@ public class ShowController {
         redirectAttributes.addFlashAttribute("successReview", "Votre avis a bien été enregistré.");
         return "redirect:/shows/" + id;
     }
+    @GetMapping("/shows")
+    public String index(@RequestParam(value = "search", required = false) String search, Model model) {
+        List<Show> shows;
+
+        if (search != null && !search.trim().isEmpty()) {
+            shows = service.searchByTitle(search.trim());
+            model.addAttribute("search", search);
+        } else {
+            shows = service.getAll();
+        }
+
+        model.addAttribute("shows", shows);
+        model.addAttribute("title", "Liste des spectacles");
+        model.addAttribute("module", "shows");
+
+        return "show/index";
+    }
 }

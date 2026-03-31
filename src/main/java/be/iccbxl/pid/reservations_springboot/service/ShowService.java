@@ -41,6 +41,10 @@ public class ShowService {
         repository.deleteById(id);
     }
 
+    public List<Show> searchByTitle(String title) {
+        return repository.findByTitleContainingIgnoreCase(title);
+    }
+
     public List<Show> getFromLocation(Location location) {
         return repository.findByLocation(location);
     }

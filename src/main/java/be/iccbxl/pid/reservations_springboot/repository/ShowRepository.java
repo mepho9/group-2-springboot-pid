@@ -3,10 +3,8 @@ package be.iccbxl.pid.reservations_springboot.repository;
 import java.util.List;
 
 import be.iccbxl.pid.reservations_springboot.model.Show;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ShowRepository extends CrudRepository<Show, Long> {
-    Show findBySlug(String slug);
-    Show findByTitle(String title);
-    List<Show> findByLocation(Location location);
+public interface ShowRepository extends JpaRepository<Show, Long> {
+    List<Show> findByTitleContainingIgnoreCase(String title);
 }
