@@ -60,6 +60,9 @@ public class ReservationController {
     @GetMapping("/representations/{id}/reserve")
     public String createReservationForm(@PathVariable("id") Long id, Model model) {
         Representation representation = representationService.get(id);
+        if (!representation.getShow().isBookable()) {
+            return "redirect:/representations/" + id;
+        }
 
         if (representation == null) {
             return "redirect:/representations";
@@ -88,6 +91,10 @@ public class ReservationController {
         }
 
         Representation representation = representationService.get(representationId);
+        if (representation == null || !representation.getShow().isBookable()) {
+            redirectAttributes.addFlashAttribute("error", "Cette représentation n'est pas réservable.");
+            return "redirect:/representations";
+        }
         Price price = priceRepository.findById(priceId).orElse(null);
         User user = userRepository.findByLogin(principal.getName());
 
