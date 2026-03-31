@@ -9,6 +9,9 @@
     <div layout:fragment="content">
         <h1 th:text="${title}">Réserver une représentation</h1>
 
+        <p th:if="${error}" th:text="${error}" style="color:red"></p>
+
+
         <p>
             <strong>Spectacle :</strong>
             <span th:text="${representation.show.title}">Titre du spectacle</span>
@@ -43,7 +46,7 @@
                 <input id="quantity" type="number" name="quantity" min="1" value="1" required />
             </div>
 
-            <button type="submit">Confirmer la réservation</button>
+            <button type="submit" th:disabled="${#lists.isEmpty(prices)}">Confirmer la réservation</button>
         </form>
 
         <p>

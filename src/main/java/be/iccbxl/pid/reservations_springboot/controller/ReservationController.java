@@ -68,7 +68,13 @@ public class ReservationController {
             return "redirect:/representations";
         }
 
-        List<Price> prices = priceRepository.findAll();
+        java.time.LocalDate today = java.time.LocalDate.now();
+        List<Price> prices = new java.util.ArrayList<>();
+        prices.addAll(priceRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(today, today));
+        prices.addAll(priceRepository.findByStartDateLessThanEqualAndEndDateIsNull(today));
+        if (prices.isEmpty()) {
+            model.addAttribute("error", "Aucun tarif disponible actuellement.");
+        }
 
         model.addAttribute("representation", representation);
         model.addAttribute("prices", prices);
