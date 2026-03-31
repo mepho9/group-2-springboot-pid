@@ -140,21 +140,22 @@ public class ShowController {
     @GetMapping("/shows")
     public String index(@RequestParam(value = "search", required = false) String search,
                         @RequestParam(value = "sort", required = false) String sort,
+                        @RequestParam(value = "page", defaultValue = "0") int page,
                         Model model) {
 
-        List<Show> shows;
-
         if (search != null && !search.trim().isEmpty()) {
-            shows = service.searchByTitle(search.trim());
+            model.addAttribute("shows", service.searchByTitle(search.trim()));
             model.addAttribute("search", search);
         } else if (sort != null && !sort.trim().isEmpty()) {
-            shows = service.getAllSorted(sort);
+            model.addAttribute("shows", service.getAllSorted(sort));
             model.addAttribute("sort", sort);
         } else {
-            shows = service.getAll();
+            Page<Show> showPage = service.getPage(page, 5);
+            model.addAttribute("shows", showPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", showPage.getTotalPages());
         }
 
-        model.addAttribute("shows", shows);
         model.addAttribute("title", "Liste des spectacles");
         model.addAttribute("module", "shows");
 

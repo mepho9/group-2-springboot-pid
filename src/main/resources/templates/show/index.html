@@ -54,6 +54,15 @@
 
                 — <a th:href="@{/shows/{id}(id=${show.id})}">Voir la fiche</a>
             </li>
+
+            <div th:if="${totalPages != null and totalPages > 1}">
+                <a th:if="${currentPage > 0}" th:href="@{/shows(page=${currentPage - 1})}">Précédent</a>
+
+                <span th:text="'Page ' + (${currentPage} + 1) + ' / ' + ${totalPages}">Page 1 / 3</span>
+
+                <a th:if="${currentPage + 1 < totalPages}" th:href="@{/shows(page=${currentPage + 1})}">Suivant</a>
+            </div>
+
         </ul>
     </div>
 </div>
