@@ -104,9 +104,19 @@ public class ReservationController {
         Price price = priceRepository.findById(priceId).orElse(null);
         User user = userRepository.findByLogin(principal.getName());
 
-        if (representation == null || price == null || user == null || quantity == null || quantity < 1) {
+        if (representation == null || price == null || user == null) {
             redirectAttributes.addFlashAttribute("error", "Impossible d'enregistrer la réservation.");
             return "redirect:/representations";
+        }
+
+        if (quantity == null || quantity < 1) {
+            redirectAttributes.addFlashAttribute("error", "La quantité doit être au moins égale à 1.");
+            return "redirect:/representations/" + representationId + "/reserve";
+        }
+
+        if (quantity > 10) {
+            redirectAttributes.addFlashAttribute("error", "La quantité maximale autorisée est de 10 places.");
+            return "redirect:/representations/" + representationId + "/reserve";
         }
 
         Reservation reservation = new Reservation(user, LocalDateTime.now(), "PENDING");

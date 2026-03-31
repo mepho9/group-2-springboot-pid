@@ -43,7 +43,8 @@
 
             <div>
                 <label for="quantity">Quantité</label>
-                <input id="quantity" type="number" name="quantity" min="1" value="1" required />
+                <input id="quantity" type="number" name="quantity" min="1" max="10" value="1" required />
+                <small>Vous pouvez réserver entre 1 et 10 places.</small>
             </div>
 
             <button type="submit" th:disabled="${#lists.isEmpty(prices)}">Confirmer la réservation</button>
