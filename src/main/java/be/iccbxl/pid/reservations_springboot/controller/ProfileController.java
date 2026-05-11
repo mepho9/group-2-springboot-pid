@@ -54,7 +54,11 @@ public class ProfileController {
 		dto.setEmail(user.getEmail());
 		dto.setLangue(user.getLangue());
 		dto.setLogin(user.getLogin());
-		dto.setRole(user.getRole().getValue());
+		if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+			dto.setRole(user.getRoles().get(0).getRole());
+		} else {
+			dto.setRole("MEMBER");
+		}
 
 		// Conversion du code linguistique en nom de la langue
 		Language userLanguage = Arrays.stream(Language.values())

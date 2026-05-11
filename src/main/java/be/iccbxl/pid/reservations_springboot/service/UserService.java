@@ -22,11 +22,11 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	public User findByEmail(String email) {
-		return userRepository.findByEmail(email).orElse(null);
+		return userRepository.findByEmail(email);
 	}
 
 	public boolean isLoginAndEmailAvailable(String login, String email) {
-		return !userRepository.existsByLogin(login) && !userRepository.existsByEmail(email);
+		return userRepository.findByLogin(login) == null && userRepository.findByEmail(email) == null;
 	}
 
 	public void registerFromDto(UserRegistrationDto dto) {
@@ -37,7 +37,7 @@ public class UserService {
 		user.setEmail(dto.getEmail());
 		user.setLangue(dto.getLangue());
 		user.setPassword(passwordEncoder.encode(dto.getPassword()));
-		user.setRole(UserRole.MEMBER);
+		// user.setRole(UserRole.MEMBER); // TODO: Fix role assignment
 		userRepository.save(user);
 	}
 
@@ -64,38 +64,30 @@ public class UserService {
 
 
 	public void deleteByLogin(String login) {
-		userRepository.findByLogin(login).ifPresent(user -> {
-			user.setDeletedAt(LocalDateTime.now());
-			userRepository.save(user);
-		});
+		User user = userRepository.findByLogin(login);
+		if (user != null) {
+			userRepository.delete(user);
+		}
 	}
 
 	public List<User> getAllUsers() {
 		List<User> users = new ArrayList<>();
 
-		repository.findAll().forEach(users::add);
+		userRepository.findAll().forEach(users::add);
 
 		return users;
 	}
 
-	public User getUser(String id) {
-		int indice = Integer.parseInt(id);
-
-		return repository.findById(indice);
+	public User getUser(Long id) {
+		return userRepository.findById(id).orElse(null);
 	}
 
 	public void addUser(User user) {
-		repository.save(user);
+		userRepository.save(user);
 	}
 
-	public void updateUser(String id, User user) {
-		repository.save(user);
-	}
-
-	public void deleteUser(String id) {
-		Long indice = (long) Integer.parseInt(id);
-
-		repository.deleteById(indice);
+	public void updateUser(Long id, User user) {
+		userRepository.save(user);
 	}
 
 

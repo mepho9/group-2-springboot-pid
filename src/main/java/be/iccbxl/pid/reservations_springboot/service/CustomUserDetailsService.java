@@ -31,13 +31,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
         		username, 
         		user.getPassword(), 
-        		getGrantedAuthorities(user.getRole().toString()));
+        		getGrantedAuthorities(user));
     }
 	
-    private List<GrantedAuthority> getGrantedAuthorities(String role) {
+    private List<GrantedAuthority> getGrantedAuthorities(User user) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-
+        if (user.getRoles() != null) {
+            for (be.iccbxl.pid.reservations_springboot.model.Role role : user.getRoles()) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole()));
+            }
+        }
         return authorities;
     }
 

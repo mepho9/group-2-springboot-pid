@@ -10,8 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import be.iccbxl.pid.model.Role;
-import be.iccbxl.pid.model.RoleService;
+
 
 @Controller
 public class RoleController {

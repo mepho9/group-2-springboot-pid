@@ -1,5 +1,8 @@
 package be.iccbxl.pid.reservations_springboot.service;
 
+import be.iccbxl.pid.reservations_springboot.model.Location;
+import be.iccbxl.pid.reservations_springboot.repository.LocationRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

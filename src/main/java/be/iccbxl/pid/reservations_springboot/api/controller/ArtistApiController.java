@@ -28,8 +28,7 @@ public class ArtistApiController {
     // GET /api/artists
     @GetMapping("/artists")
     public CollectionModel<EntityModel<Artist>> all() {
-        List<EntityModel<Artist>> artists = artistRepository.findAll()
-                .stream()
+        List<EntityModel<Artist>> artists = java.util.stream.StreamSupport.stream(artistRepository.findAll().spliterator(), false)
                 .map(artistAssembler::toModel)
                 .toList();
 

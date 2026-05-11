@@ -33,7 +33,7 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private List<Representation> representations = new ArrayList<>();
 
-    protected User() {}
+    public User() {}
 
     public User(String login, String firstname, String lastname) {
         this.login = login;
@@ -43,8 +43,6 @@ public class User {
     }
 
     // getters/setters identiques...
-}
-
 
     public Long getId() {
         return id;

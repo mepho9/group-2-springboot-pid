@@ -22,7 +22,7 @@ public class TypeService {
         return types;
     }
 
-    public Type getType(String id) {
+    public Type get(String id) {
         Long indice = (long) Integer.parseInt(id);
 
         Optional<Type> type = repository.findById(indice);

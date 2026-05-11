@@ -1,5 +1,8 @@
 package be.iccbxl.pid.reservations_springboot.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
 import java.util.List;
 
 import be.iccbxl.pid.reservations_springboot.model.Show;
@@ -13,8 +16,10 @@ public interface ShowRepository extends JpaRepository<Show, Long> {
     List<Show> findAllByOrderByTitleAsc();
     List<Show> findAllByOrderByTitleDesc();
 
+    List<Show> findByLocation(be.iccbxl.pid.reservations_springboot.model.Location location);
+
 
     default Page<Show> getPage(int page, int size) {
-        return repository.findAll(PageRequest.of(page, size));
+        return findAll(PageRequest.of(page, size));
     }
 }

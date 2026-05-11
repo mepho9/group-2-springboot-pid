@@ -10,8 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import be.iccbxl.pid.model.Locality;
-import be.iccbxl.pid.model.LocalityService;
+
 
 @Controller
 public class LocalityController {

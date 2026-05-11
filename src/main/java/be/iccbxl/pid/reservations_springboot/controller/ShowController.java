@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.springframework.data.domain.Page;
 
 import be.iccbxl.pid.reservations_springboot.model.Artist;
 import be.iccbxl.pid.reservations_springboot.model.ArtistType;
@@ -67,30 +68,6 @@ public class ShowController {
         return "show/show";
     }
 
-    @GetMapping("/shows/{id}")
-    public String show(Model model, @PathVariable("id") Long id) {
-        Show show = service.get(id);
-
-        if (show == null) {
-            return "redirect:/shows";
-        }
-
-        Map<String, ArrayList<Artist>> collaborateurs = new TreeMap<>();
-
-        for (ArtistType at : show.getArtistTypes()) {
-            String type = at.getType().getType();
-
-            collaborateurs.computeIfAbsent(type, k -> new ArrayList<>());
-            collaborateurs.get(type).add(at.getArtist());
-        }
-
-        model.addAttribute("collaborateurs", collaborateurs);
-        model.addAttribute("show", show);
-        model.addAttribute("title", "Fiche d'un spectacle");
-        model.addAttribute("module", "shows");
-
-        return "show/show";
-    }
     @PostMapping("/shows/{id}/reviews")
     public String storeReview(@PathVariable("id") Long id,
                               @RequestParam("stars") Integer stars,

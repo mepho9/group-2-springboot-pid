@@ -7,6 +7,7 @@ import java.util.Optional;
 import be.iccbxl.pid.reservations_springboot.model.Location;
 import be.iccbxl.pid.reservations_springboot.model.Show;
 import be.iccbxl.pid.reservations_springboot.repository.ShowRepository;
+import org.springframework.data.domain.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,9 @@ public class ShowService {
             return repository.findAllByOrderByTitleDesc();
         }
         return repository.findAllByOrderByTitleAsc();
+    }
+
+    public Page<Show> getPage(int page, int size) {
+        return repository.getPage(page, size);
     }
 }
