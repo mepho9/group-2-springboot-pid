@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 public class User {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     private String login;
@@ -25,7 +25,7 @@ public class User {
     private String lastname;
     private String email;
     private String langue;
-    private LocalDateTime created_at;
+    private LocalDateTime created_at = LocalDateTime.now();
 
     @ManyToMany(mappedBy = "users")
     private List<Role> roles = new ArrayList<>();

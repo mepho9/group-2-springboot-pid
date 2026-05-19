@@ -21,7 +21,7 @@ import com.github.slugify.Slugify;
 @Table(name="artist_type")
 public class ArtistType {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

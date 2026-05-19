@@ -1,0 +1,41 @@
+<div class="users-container">
+  <h2>Liste des Utilisateurs</h2>
+
+  <div *ngIf="loading" class="spinner">Chargement des utilisateurs...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="!loading && !error && users.length === 0" class="alert alert-info">
+    Aucun utilisateur trouvé.
+  </div>
+
+  <div class="table-responsive" *ngIf="!loading && !error && users.length > 0">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Login</th>
+          <th>Email</th>
+          <th>Langue</th>
+          <th>Rôles</th>
+          <th>Date de création</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.firstname }}</td>
+          <td>{{ user.lastname }}</td>
+          <td><strong>{{ user.login }}</strong></td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.langue | uppercase }}</td>
+          <td>
+            <span *ngFor="let role of user.roles" class="badge role-badge">{{ role }}</span>
+          </td>
+          <td>{{ user.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

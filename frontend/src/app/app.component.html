@@ -1,0 +1,24 @@
+<div class="app-container">
+  <nav class="navbar" *ngIf="authService.isLoggedIn$ | async">
+    <div class="logo">🎭 TheaterBooking</div>
+    <ul class="nav-links">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Accueil</a></li>
+      <li><a routerLink="/artists" routerLinkActive="active">Artistes</a></li>
+      <li><a routerLink="/users" routerLinkActive="active">Utilisateurs</a></li>
+    </ul>
+    <div class="user-profile">
+      <div class="user-avatar">
+        👤 {{ authService.currentUser$ | async }}
+      </div>
+      <button class="btn-logout" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="footer" *ngIf="authService.isLoggedIn$ | async">
+    <p>&copy; 2026 TheaterBooking. Tous droits réservés.</p>
+  </footer>
+</div>

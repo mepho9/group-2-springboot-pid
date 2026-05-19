@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @NoArgsConstructor(force = true, access = AccessLevel.PUBLIC)
@@ -21,12 +22,13 @@ import java.util.List;
 @Table(name="artists")
 public class Artist {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String firstname;
 	private String lastname;
 
 	@ManyToMany(mappedBy = "artists")
+	@JsonIgnoreProperties("artists")
 	private List<Type> types = new ArrayList<>();
 
 	public Artist(String firstname, String lastname) {

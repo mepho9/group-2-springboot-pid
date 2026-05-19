@@ -1,0 +1,18 @@
+import { Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { ArtistListComponent } from './artist-list/artist-list.component';
+import { ArtistDetailComponent } from './artist-detail/artist-detail.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { UserListComponent } from './user-list/user-list.component';
+import { authGuard } from './guards/auth.guard';
+
+export const routes: Routes = [
+  { path: '', component: HomeComponent, canActivate: [authGuard] },
+  { path: 'artists', component: ArtistListComponent, canActivate: [authGuard] },
+  { path: 'artists/:id', component: ArtistDetailComponent, canActivate: [authGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'users', component: UserListComponent, canActivate: [authGuard] },
+  { path: '**', redirectTo: '' }
+];

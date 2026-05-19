@@ -20,7 +20,7 @@ import jakarta.persistence.Table;
 public class Representation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
