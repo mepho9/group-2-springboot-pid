@@ -12,12 +12,15 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import be.iccbxl.pid.reservations_springboot.dto.UserDto;
+import be.iccbxl.pid.reservations_springboot.dto.UserProfileDto;
 import be.iccbxl.pid.reservations_springboot.dto.UserRegistrationDto;
 import be.iccbxl.pid.reservations_springboot.model.User;
 import be.iccbxl.pid.reservations_springboot.service.UserService;
@@ -40,6 +43,35 @@ public class UserApiController {
         return ResponseEntity.ok(userDtos);
     }
 
+    // GET /api/users/{login}
+    @GetMapping("/{login}")
+    public ResponseEntity<UserDto> getUserByLogin(@PathVariable String login) {
+        User user = userService.findByLogin(login);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(UserDto.fromEntity(user));
+    }
+
+    // PUT /api/users/{login}
+    @PutMapping("/{login}")
+    public ResponseEntity<?> updateUserProfile(@PathVariable String login, @Valid @RequestBody UserProfileDto profileDto) {
+        User user = userService.findByLogin(login);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // S'assurer de mettre à jour le bon utilisateur
+        profileDto.setId(user.getId());
+        
+        try {
+            userService.updateUserFromDto(profileDto);
+            return ResponseEntity.ok(Map.of("message", "Profil mis à jour avec succès"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Erreur lors de la mise à jour : " + e.getMessage()));
+        }
+    }
+
     // POST /api/users/register
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDto registrationDto) {
@@ -60,7 +92,7 @@ public class UserApiController {
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
+            String fieldName = (error instanceof FieldError) ? ((FieldError) error).getField() : error.getObjectName();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });

@@ -5,6 +5,8 @@ import { ArtistDetailComponent } from './artist-detail/artist-detail.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { UserListComponent } from './user-list/user-list.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ShowListComponent } from './show-list/show-list.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -14,5 +16,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'users', component: UserListComponent, canActivate: [authGuard] },
+  { path: 'profile', component: UserProfileComponent, canActivate: [authGuard] },
+  { path: 'show', component: ShowListComponent },
   { path: '**', redirectTo: '' }
 ];

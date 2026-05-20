@@ -25,6 +25,10 @@ public class UserService {
 		return userRepository.findByEmail(email);
 	}
 
+	public User findByLogin(String login) {
+		return userRepository.findByLogin(login);
+	}
+
 	public boolean isLoginAndEmailAvailable(String login, String email) {
 		return userRepository.findByLogin(login) == null && userRepository.findByEmail(email) == null;
 	}

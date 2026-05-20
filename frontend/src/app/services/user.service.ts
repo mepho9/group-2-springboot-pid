@@ -28,4 +28,12 @@ export class UserService {
   registerUser(userData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, userData);
   }
+
+  getUserByLogin(login: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${login}`);
+  }
+
+  updateUser(login: string, userData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${login}`, userData);
+  }
 }

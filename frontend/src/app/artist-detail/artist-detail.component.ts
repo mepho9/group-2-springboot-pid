@@ -28,8 +28,7 @@ import { ArtistService, Artist } from '../services/artist.service';
         </div>
         <div class="profile-info">
           <h1>{{ artist.firstname }} {{ artist.lastname }}</h1>
-          <p class="text-muted">Acteur / Metteur en Scène</p>
-          
+
           <div class="mt-4">
             <button class="btn-primary">Voir ses spectacles</button>
           </div>
