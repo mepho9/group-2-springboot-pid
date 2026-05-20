@@ -1,0 +1,76 @@
+<div class="slider-container">
+  <div class="slider-header text-center">
+    <h1 class="slider-title">Spectacles à l'Affiche</h1>
+    <p class="slider-subtitle">Faites défiler vers le bas à la molette pour découvrir nos représentations exclusives</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <div class="error-card">
+      <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      <p class="error-message">{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="show.length === 0 && !error" class="loading-container">
+    <div class="spinner"></div>
+    <p class="loading-text">Chargement des spectacles...</p>
+  </div>
+
+  <div *ngIf="show.length > 0" class="slider-wrapper">
+    <!-- Slider Viewport (Scroll Container) -->
+    <div class="slider-viewport" (scroll)="onScroll($event)">
+      <div class="slider-track">
+        <div *ngFor="let item of show; let i = index" 
+             class="show-card-outer"
+             [class.active]="i === activeIndex">
+          
+          <div class="show-card">
+            <!-- Poster -->
+            <div class="poster-area">
+              <img [src]="'assets/' + item.poster" [alt]="item.title" class="poster-image">
+              <div class="badge-overlay">
+                <span class="status-tag" [class.available]="item.bookable" [class.soldout]="!item.bookable">
+                  {{ item.bookable ? 'Disponible' : 'Complet' }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="info-area">
+              <h2 class="show-heading">{{ item.title }}</h2>
+              <p class="show-description">{{ item.description }}</p>
+              
+              <div class="action-footer">
+                <div class="price-container">
+                  <span class="price-label">Tarif unique</span>
+                  <span class="price-value">{{ item.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+                </div>
+                <button class="book-button" [disabled]="!item.bookable">
+                  <span>{{ item.bookable ? 'Réserver mes places' : 'Épuisé' }}</span>
+                  <svg *ngIf="item.bookable" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon">
+                    <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vertical Progress Indicators on the Right Side -->
+  <div *ngIf="show.length > 0" class="slider-indicators">
+    <button *ngFor="let item of show; let i = index" 
+            class="indicator-dot" 
+            [class.active]="i === activeIndex"
+            (click)="scrollTo(i)"
+            [attr.aria-label]="'Aller au spectacle ' + (i + 1)">
+    </button>
+  </div>
+</div>

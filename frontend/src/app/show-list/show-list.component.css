@@ -1,0 +1,427 @@
+.slider-container {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 180px);
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+
+/* Header */
+.slider-header {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 2rem;
+  max-width: 600px;
+}
+
+.slider-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #ffffff 30%, var(--text-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.slider-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+/* Wrapper and Nav Controls */
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* Vertical Scroll Snapping Viewport */
+.slider-viewport {
+  width: 100%;
+  max-width: 1050px;
+  height: 760px; /* Increased viewport height to fit the even larger card */
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Hide scrollbar Firefox */
+  -ms-overflow-style: none;  /* Hide scrollbar IE/Edge */
+  padding: 40px 0;
+  box-sizing: border-box;
+}
+
+/* Hide scrollbar for Chrome/Safari/Webkit */
+.slider-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+/* Vertical Track */
+.slider-track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px; /* Gap between cards in scroll view */
+  padding: 40px 0 200px 0; /* Add bottom padding so the last card snaps correctly */
+}
+
+/* Card Outer Wrapper */
+.show-card-outer {
+  width: 100%;
+  max-width: 960px; /* Increased from 820px to make the card giant */
+  scroll-snap-align: center; /* Snap cards to center vertically */
+  opacity: 0.25;
+  transform: scale(0.9) translateZ(-50px);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+              opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+              filter 0.6s ease;
+  filter: blur(2px);
+}
+
+/* Active Card */
+.show-card-outer.active {
+  opacity: 1;
+  transform: scale(1.03) translateZ(0);
+  filter: blur(0);
+}
+
+/* The Card Body */
+.show-card {
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px; /* Slightly more rounded corners for the giant card */
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  display: flex;
+  height: 600px; /* Increased from 540px to make the card massive */
+  width: 100%;
+}
+
+.show-card-outer.active .show-card:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 30px 60px rgba(99, 102, 241, 0.15), 0 0 1px 1px rgba(99, 102, 241, 0.2);
+}
+
+/* Poster Area - Left side of Card (Large Image) */
+.poster-area {
+  position: relative;
+  width: 60%; /* Increased from 55% to give the poster maximum space */
+  height: 100%;
+  overflow: hidden;
+  background-color: #0b0f19;
+}
+
+.poster-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.show-card-outer.active:hover .poster-image {
+  transform: scale(1.08);
+}
+
+/* Badges */
+.badge-overlay {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.status-tag {
+  padding: 0.4rem 0.8rem;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+  width: fit-content;
+}
+
+.status-tag.available {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.status-tag.soldout {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* Info Area - Right side of Card */
+.info-area {
+  padding: 3rem; /* Increased padding for the larger card */
+  width: 40%; /* Decreased from 45% to maximize the poster width */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.show-heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.show-description {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Footer / Action row */
+.action-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1.25rem;
+}
+
+.price-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.price-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.price-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.book-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.book-button:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.5);
+}
+
+.book-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.book-button:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s;
+}
+
+.book-button:hover .btn-icon {
+  transform: translateX(3px);
+}
+
+/* Vertical Indicators on the Right Side */
+.slider-indicators {
+  position: absolute;
+  right: 4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.indicator-dot.active {
+  background: var(--primary);
+  height: 28px;
+  border-radius: 10px;
+}
+
+/* Responsive Rules */
+@media (max-width: 1024px) {
+  .slider-viewport {
+    max-width: 700px;
+    height: 600px;
+  }
+  .show-card {
+    height: 440px;
+  }
+  .slider-indicators {
+    right: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .slider-container {
+    padding: 1rem 0;
+  }
+  
+  .slider-header {
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .slider-title {
+    font-size: 1.75rem;
+  }
+  
+  .slider-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .slider-viewport {
+    height: calc(100vh - 280px);
+    padding: 20px 0;
+  }
+  
+  .slider-track {
+    gap: 40px;
+    padding: 20px 0 150px 0;
+  }
+  
+  .show-card-outer {
+    max-width: 90%;
+  }
+  
+  .show-card {
+    flex-direction: column; /* Stack vertically on small screens */
+    height: auto;
+    min-height: 500px;
+  }
+  
+  .poster-area {
+    width: 100%;
+    height: 220px;
+  }
+  
+  .info-area {
+    width: 100%;
+    padding: 1.5rem;
+  }
+  
+  .show-heading {
+    font-size: 1.4rem;
+  }
+  
+  .slider-indicators {
+    right: 1rem;
+  }
+}
+
+/* Loading & Error States styling */
+.loading-container, .error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  gap: 1.5rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-left-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.error-card {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 3rem;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.error-icon {
+  width: 64px;
+  height: 64px;
+  color: #f87171;
+}
+
+.error-message {
+  color: #fca5a5;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

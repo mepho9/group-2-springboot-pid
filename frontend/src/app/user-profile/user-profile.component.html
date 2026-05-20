@@ -1,0 +1,116 @@
+<div class="profile-container fade-in">
+
+  <div *ngIf="successMessage" class="success-alert">
+    ✅ {{ successMessage }}
+  </div>
+
+  <div class="profile-card" *ngIf="user; else loadingOrError">
+    <div class="profile-header">
+      <button class="btn-edit-toggle" (click)="toggleEditMode()">
+        {{ isEditing ? '❌ Annuler' : '✏️ Éditer le profil' }}
+      </button>
+
+      <div class="avatar-large">
+        <span class="avatar-initial">{{ user.firstname.charAt(0) }}{{ user.lastname.charAt(0) }}</span>
+      </div>
+      <h1 class="profile-name">{{ user.firstname }} {{ user.lastname }}</h1>
+      <p class="profile-username">{{ '@' }}{{ user.login }}</p>
+
+      <div class="role-badge" *ngIf="user.roles && user.roles.length > 0">
+        {{ user.roles[0] }}
+      </div>
+    </div>
+
+    <div class="profile-content">
+      <!-- Vue Lecture (Lecture seule) -->
+      <ng-container *ngIf="!isEditing">
+        <div class="info-card">
+          <div class="info-icon">📧</div>
+          <div class="info-details">
+            <div class="info-label">Adresse Email</div>
+            <div class="info-value">{{ user.email }}</div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">🌐</div>
+          <div class="info-details">
+            <div class="info-label">Langue</div>
+            <div class="info-value">{{ user.langue }}</div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">📅</div>
+          <div class="info-details">
+            <div class="info-label">Date d'inscription</div>
+            <div class="info-value">{{ user.created_at | date:'dd MMMM yyyy' }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Vue Édition (Formulaire) -->
+      <form *ngIf="isEditing" [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="edit-form fade-in">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstname">Prénom</label>
+            <input type="text" id="firstname" formControlName="firstname" class="form-control" />
+            <div *ngIf="profileForm.get('firstname')?.touched && profileForm.get('firstname')?.hasError('required')" class="text-danger small">Prénom requis</div>
+          </div>
+          <div class="form-group">
+            <label for="lastname">Nom</label>
+            <input type="text" id="lastname" formControlName="lastname" class="form-control" />
+            <div *ngIf="profileForm.get('lastname')?.touched && profileForm.get('lastname')?.hasError('required')" class="text-danger small">Nom requis</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Adresse Email</label>
+          <input type="email" id="email" formControlName="email" class="form-control" />
+          <div *ngIf="profileForm.get('email')?.touched && profileForm.get('email')?.hasError('required')" class="text-danger small">Email requis</div>
+          <div *ngIf="profileForm.get('email')?.touched && profileForm.get('email')?.hasError('email')" class="text-danger small">Email invalide</div>
+        </div>
+
+        <div class="form-group">
+          <label for="langue">Langue préférée</label>
+          <select id="langue" formControlName="langue" class="form-control">
+            <option value="fr">Français</option>
+            <option value="en">Anglais</option>
+            <option value="nl">Néerlandais</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Nouveau mot de passe <span class="text-optional">(Laissez vide pour conserver)</span></label>
+            <input type="password" id="password" formControlName="password" class="form-control" placeholder="••••••••" />
+            <div *ngIf="profileForm.get('password')?.touched && profileForm.get('password')?.hasError('minlength')" class="text-danger small">Min 6 caractères</div>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirmer le mot de passe</label>
+            <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control" placeholder="••••••••" />
+            <div *ngIf="profileForm.get('confirmPassword')?.touched && profileForm.get('confirmPassword')?.hasError('passwordMismatch')" class="text-danger small">Les mots de passe ne correspondent pas</div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save" [disabled]="profileForm.invalid || loading">
+            <span *ngIf="loading" class="spinner-small"></span>
+            💾 Enregistrer les modifications
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <ng-template #loadingOrError>
+    <div *ngIf="loading && !user" class="loading-state">
+      <div class="spinner"></div>
+      <p>Chargement du profil...</p>
+    </div>
+    <div *ngIf="error" class="error-state">
+      <div class="error-icon">⚠️</div>
+      <p>{{ error }}</p>
+    </div>
+  </ng-template>
+</div>
