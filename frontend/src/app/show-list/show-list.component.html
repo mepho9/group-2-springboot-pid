@@ -1,7 +1,50 @@
-<div class="slider-container">
-  <div class="slider-header text-center">
-    <h1 class="slider-title">Spectacles à l'Affiche</h1>
-    <p class="slider-subtitle">Faites défiler vers le bas à la molette pour découvrir nos représentations exclusives</p>
+<div class="shows-container">
+  <!-- Toast Notification -->
+  <div class="toast-notification fade-in" *ngIf="toastMessage">
+    {{ toastMessage }}
+  </div>
+
+  <div class="shows-header text-center">
+    <h1 class="shows-title">Spectacles à l'Affiche</h1>
+    <p class="shows-subtitle">Découvrez et réservez nos représentations exclusives</p>
+  </div>
+
+  <!-- Search, Filter & Sort Toolbar -->
+  <div class="toolbar-container" *ngIf="show.length > 0 && !error">
+    <div class="search-box">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input type="text" 
+             class="search-input" 
+             placeholder="Rechercher un spectacle..." 
+             [(ngModel)]="searchQuery" />
+      <button *ngIf="searchQuery" class="clear-btn" (click)="searchQuery = ''">✕</button>
+    </div>
+
+    <div class="toolbar-controls">
+      <!-- Filter By Availability -->
+      <div class="control-group">
+        <label for="statusFilter">Statut</label>
+        <select id="statusFilter" class="select-control" [(ngModel)]="statusFilter">
+          <option value="all">Tous les spectacles</option>
+          <option value="available">🟢 Disponibles</option>
+          <option value="soldout">🔴 Complets</option>
+        </select>
+      </div>
+
+      <!-- Sort By -->
+      <div class="control-group">
+        <label for="sortBy">Trier par</label>
+        <select id="sortBy" class="select-control" [(ngModel)]="sortBy">
+          <option value="default">Par défaut</option>
+          <option value="title-asc">Titre (A - Z)</option>
+          <option value="title-desc">Titre (Z - A)</option>
+          <option value="price-asc">Prix (Croissant)</option>
+          <option value="price-desc">Prix (Décroissant)</option>
+        </select>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->
@@ -20,57 +63,62 @@
     <p class="loading-text">Chargement des spectacles...</p>
   </div>
 
-  <div *ngIf="show.length > 0" class="slider-wrapper">
-    <!-- Slider Viewport (Scroll Container) -->
-    <div class="slider-viewport" (scroll)="onScroll($event)">
-      <div class="slider-track">
-        <div *ngFor="let item of show; let i = index" 
-             class="show-card-outer"
-             [class.active]="i === activeIndex">
-          
-          <div class="show-card">
-            <!-- Poster -->
-            <div class="poster-area">
-              <img [src]="'assets/' + item.poster" [alt]="item.title" class="poster-image">
-              <div class="badge-overlay">
-                <span class="status-tag" [class.available]="item.bookable" [class.soldout]="!item.bookable">
-                  {{ item.bookable ? 'Disponible' : 'Complet' }}
-                </span>
-              </div>
-            </div>
-
-            <!-- Content Area -->
-            <div class="info-area">
-              <h2 class="show-heading">{{ item.title }}</h2>
-              <p class="show-description">{{ item.description }}</p>
-              
-              <div class="action-footer">
-                <div class="price-container">
-                  <span class="price-label">Tarif unique</span>
-                  <span class="price-value">{{ item.price | currency:'EUR':'symbol':'1.2-2' }}</span>
-                </div>
-                <button class="book-button" [disabled]="!item.bookable">
-                  <span>{{ item.bookable ? 'Réserver mes places' : 'Épuisé' }}</span>
-                  <svg *ngIf="item.bookable" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon">
-                    <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
+  <!-- No Results State -->
+  <div *ngIf="filteredShows.length === 0 && show.length > 0" class="empty-state">
+    <div class="empty-icon">🔍</div>
+    <h3>Aucun spectacle ne correspond à vos critères</h3>
+    <p>Essayez de modifier votre recherche ou de réinitialiser vos filtres.</p>
+    <button class="btn-reset" (click)="searchQuery = ''; statusFilter = 'all'; sortBy = 'default'">
+      Réinitialiser les filtres
+    </button>
   </div>
 
-  <!-- Vertical Progress Indicators on the Right Side -->
-  <div *ngIf="show.length > 0" class="slider-indicators">
-    <button *ngFor="let item of show; let i = index" 
-            class="indicator-dot" 
-            [class.active]="i === activeIndex"
-            (click)="scrollTo(i)"
-            [attr.aria-label]="'Aller au spectacle ' + (i + 1)">
-    </button>
+  <!-- Grid of Shows -->
+  <div *ngIf="filteredShows.length > 0" class="shows-grid fade-in">
+    <div *ngFor="let item of filteredShows" 
+         [id]="'show-card-' + item.id"
+         class="grid-show-card"
+         [class.highlighted]="highlightedShowId === item.id">
+      
+      <!-- Poster Container -->
+      <div class="card-poster">
+        <img [src]="'assets/' + item.poster" [alt]="item.title" class="poster-img">
+        <div class="badge-overlay">
+          <span class="status-tag" [class.available]="item.bookable" [class.soldout]="!item.bookable">
+            {{ item.bookable ? 'Disponible' : 'Complet' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="card-body">
+        <h3 class="card-title">{{ item.title }}</h3>
+        <p class="card-desc">{{ item.description }}</p>
+
+        <div class="card-footer">
+          <div class="price-box">
+            <span class="price-label">Tarif</span>
+            <span class="price-val">{{ item.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <div class="card-actions">
+            <button type="button" 
+                    class="btn-icon-share" 
+                    (click)="shareShow(item, $event)" 
+                    [class.copied]="copiedShowId === item.id"
+                    [attr.aria-label]="'Partager le spectacle ' + item.title"
+                    title="Partager le lien direct">
+              <span *ngIf="copiedShowId === item.id">✓ Copié</span>
+              <span *ngIf="copiedShowId !== item.id">🔗 Partager</span>
+            </button>
+
+            <button class="btn-book" [disabled]="!item.bookable">
+              {{ item.bookable ? 'Réserver' : 'Épuisé' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>

@@ -6,9 +6,14 @@
 
   <div class="profile-card" *ngIf="user; else loadingOrError">
     <div class="profile-header">
-      <button class="btn-edit-toggle" (click)="toggleEditMode()">
-        {{ isEditing ? '❌ Annuler' : '✏️ Éditer le profil' }}
-      </button>
+      <div class="header-actions">
+        <button class="btn-edit-toggle" (click)="toggleEditMode()">
+          {{ isEditing ? '❌ Annuler' : '✏️ Éditer le profil' }}
+        </button>
+        <button class="btn-delete-account" (click)="openDeleteModal()">
+          🗑️ Supprimer le compte
+        </button>
+      </div>
 
       <div class="avatar-large">
         <span class="avatar-initial">{{ user.firstname.charAt(0) }}{{ user.lastname.charAt(0) }}</span>
@@ -100,6 +105,29 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal de confirmation de suppression de compte -->
+  <div class="modal-overlay fade-in" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <span class="modal-icon">⚠️</span>
+        <h2>Confirmer la suppression</h2>
+      </div>
+      <div class="modal-body">
+        <p>Êtes-vous absolument sûr de vouloir supprimer votre compte ?</p>
+        <p class="modal-warning">Cette action est irréversible. Toutes vos données seront définitivement effacées.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="closeDeleteModal()" [disabled]="isDeleting">
+          Annuler
+        </button>
+        <button type="button" class="btn-danger" (click)="confirmDeleteAccount()" [disabled]="isDeleting">
+          <span *ngIf="isDeleting" class="spinner-small"></span>
+          {{ isDeleting ? 'Suppression...' : 'Oui, supprimer définitivement' }}
+        </button>
+      </div>
     </div>
   </div>
 

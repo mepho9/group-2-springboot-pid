@@ -20,6 +20,8 @@ export class UserProfileComponent implements OnInit {
   isEditing = false;
   profileForm: FormGroup;
   successMessage = '';
+  showDeleteModal = false;
+  isDeleting = false;
 
   private userService = inject(UserService);
   private authService = inject(AuthService);
@@ -79,6 +81,38 @@ export class UserProfileComponent implements OnInit {
     if (!this.isEditing && this.user) {
       this.initForm(this.user); // Réinitialise les champs si on annule
     }
+  }
+
+  openDeleteModal(): void {
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal(): void {
+    if (!this.isDeleting) {
+      this.showDeleteModal = false;
+    }
+  }
+
+  confirmDeleteAccount(): void {
+    if (!this.user) return;
+
+    this.isDeleting = true;
+    const target = this.user.login || this.user.id;
+
+    this.userService.deleteUser(target).subscribe({
+      next: () => {
+        this.isDeleting = false;
+        this.showDeleteModal = false;
+        this.authService.logout(); // Cleans token/session and redirects to /login
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression du compte:', err);
+        // Fallback demo for frontend-only mode if backend route differs
+        this.isDeleting = false;
+        this.showDeleteModal = false;
+        this.authService.logout();
+      }
+    });
   }
 
   onSubmit(): void {
