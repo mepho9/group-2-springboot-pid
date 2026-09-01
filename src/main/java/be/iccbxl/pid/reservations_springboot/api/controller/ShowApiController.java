@@ -6,6 +6,7 @@ import be.iccbxl.pid.reservations_springboot.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,4 +27,13 @@ public class ShowApiController {
         return ResponseEntity.ok(showDtos);
     }
 
+    // GET /api/shows/{id}
+    @GetMapping("/{id}")
+    public ResponseEntity<ShowDto> getShowById(@PathVariable long id) {
+        Show show = showService.get(id);
+        if (show == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(ShowDto.fromEntity(show));
+    }
 }

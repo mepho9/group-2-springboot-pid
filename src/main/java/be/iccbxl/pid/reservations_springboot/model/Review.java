@@ -33,9 +33,6 @@ public class Review {
     @Column(nullable = false)
     private Integer stars;
 
-    @Column(nullable = false)
-    private Boolean validated;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -49,7 +46,6 @@ public class Review {
         this.show = show;
         this.review = review;
         this.stars = stars;
-        this.validated = false;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = null;
     }
@@ -90,14 +86,6 @@ public class Review {
         this.stars = stars;
     }
 
-    public Boolean getValidated() {
-        return validated;
-    }
-
-    public void setValidated(Boolean validated) {
-        this.validated = validated;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -115,7 +103,6 @@ public class Review {
         return "Review [id=" + id
                 + ", user=" + (user != null ? user.getLogin() : null)
                 + ", show=" + (show != null ? show.getTitle() : null)
-                + ", stars=" + stars
-                + ", validated=" + validated + "]";
+                + ", stars=" + stars + "]";
     }
 }

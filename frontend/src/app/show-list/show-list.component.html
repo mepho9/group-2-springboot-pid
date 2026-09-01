@@ -1,5 +1,4 @@
 <div class="shows-container">
-  <!-- Toast Notification -->
   <div class="toast-notification fade-in" *ngIf="toastMessage">
     {{ toastMessage }}
   </div>
@@ -9,7 +8,6 @@
     <p class="shows-subtitle">Découvrez et réservez nos représentations exclusives</p>
   </div>
 
-  <!-- Search, Filter & Sort Toolbar -->
   <div class="toolbar-container" *ngIf="show.length > 0 && !error">
     <div class="search-box">
       <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,7 +21,6 @@
     </div>
 
     <div class="toolbar-controls">
-      <!-- Filter By Availability -->
       <div class="control-group">
         <label for="statusFilter">Statut</label>
         <select id="statusFilter" class="select-control" [(ngModel)]="statusFilter">
@@ -33,7 +30,6 @@
         </select>
       </div>
 
-      <!-- Sort By -->
       <div class="control-group">
         <label for="sortBy">Trier par</label>
         <select id="sortBy" class="select-control" [(ngModel)]="sortBy">
@@ -47,7 +43,6 @@
     </div>
   </div>
 
-  <!-- Error State -->
   <div *ngIf="error" class="error-container">
     <div class="error-card">
       <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -57,13 +52,11 @@
     </div>
   </div>
 
-  <!-- Loading State -->
   <div *ngIf="show.length === 0 && !error" class="loading-container">
     <div class="spinner"></div>
     <p class="loading-text">Chargement des spectacles...</p>
   </div>
 
-  <!-- No Results State -->
   <div *ngIf="filteredShows.length === 0 && show.length > 0" class="empty-state">
     <div class="empty-icon">🔍</div>
     <h3>Aucun spectacle ne correspond à vos critères</h3>
@@ -73,14 +66,14 @@
     </button>
   </div>
 
-  <!-- Grid of Shows -->
   <div *ngIf="filteredShows.length > 0" class="shows-grid fade-in">
     <div *ngFor="let item of filteredShows" 
          [id]="'show-card-' + item.id"
          class="grid-show-card"
-         [class.highlighted]="highlightedShowId === item.id">
+         [class.highlighted]="highlightedShowId === item.id"
+         [routerLink]="['/shows', item.id]"
+         style="cursor: pointer;">
       
-      <!-- Poster Container -->
       <div class="card-poster">
         <img [src]="'assets/' + item.poster" [alt]="item.title" class="poster-img">
         <div class="badge-overlay">
@@ -90,7 +83,6 @@
         </div>
       </div>
 
-      <!-- Content Area -->
       <div class="card-body">
         <h3 class="card-title">{{ item.title }}</h3>
         <p class="card-desc">{{ item.description }}</p>

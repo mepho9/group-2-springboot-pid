@@ -57,7 +57,7 @@ public class ShowController {
             collaborateurs.get(type).add(at.getArtist());
         }
 
-        List<Review> reviews = reviewRepository.findByShowAndValidatedTrue(show);
+        List<Review> reviews = reviewRepository.findByShow(show);
 
         model.addAttribute("collaborateurs", collaborateurs);
         model.addAttribute("reviews", reviews);

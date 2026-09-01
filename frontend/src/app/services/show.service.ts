@@ -15,13 +15,24 @@ export interface Show {
 @Injectable({
   providedIn: 'root'
 })
+export class ShowService {
+  private apiUrl = '/api/shows';
 
-export class ShowService{
-   private apiUrl = '/api/shows'
-
-  constructor(private  http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getShow(): Observable<Show[]> {
-     return this.http.get<Show[]>(this.apiUrl);
+    return this.http.get<Show[]>(this.apiUrl);
+  }
+
+  getShowById(id: number): Observable<Show> {
+    return this.http.get<Show>(`${this.apiUrl}/${id}`);
+  }
+
+  getShowReviews(showId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${showId}/reviews`);
+  }
+
+  addShowReview(showId: number, reviewData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${showId}/reviews`, reviewData);
   }
 }

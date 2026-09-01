@@ -20,17 +20,17 @@ public class AdminReviewController {
 
     @GetMapping("/admin/reviews")
     public String index(Model model) {
-        List<Review> reviews = reviewRepository.findByValidatedFalse();
+        List<Review> reviews = reviewRepository.findAll();
 
         model.addAttribute("reviews", reviews);
-        model.addAttribute("title", "Avis à valider");
+        model.addAttribute("title", "Avis");
         model.addAttribute("module", "admin-reviews");
 
         return "admin/review/index";
     }
 
-    @PostMapping("/admin/reviews/{id}/validate")
-    public String validateReview(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    @PostMapping("/admin/reviews/{id}/delete")
+    public String deleteReview(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Review review = reviewRepository.findById(id).orElse(null);
 
         if (review == null) {
@@ -38,10 +38,9 @@ public class AdminReviewController {
             return "redirect:/admin/reviews";
         }
 
-        review.setValidated(true);
-        reviewRepository.save(review);
+        reviewRepository.delete(review);
 
-        redirectAttributes.addFlashAttribute("success", "Avis validé avec succès.");
+        redirectAttributes.addFlashAttribute("success", "Avis supprimé avec succès.");
         return "redirect:/admin/reviews";
     }
 }

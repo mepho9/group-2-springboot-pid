@@ -1,0 +1,134 @@
+<div class="show-detail-container fade-in">
+
+  <div class="nav-top">
+    <a routerLink="/show" class="btn-back">
+      ← Retour à la liste des spectacles
+    </a>
+  </div>
+
+  <div class="toast-notification fade-in" *ngIf="toastMessage">
+    {{ toastMessage }}
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement des informations du spectacle...</p>
+  </div>
+
+  <div *ngIf="error && !loading" class="error-card">
+    <div class="error-icon">⚠️</div>
+    <h3>Spectacle Introuvable</h3>
+    <p>{{ error }}</p>
+    <a routerLink="/show" class="btn-primary mt-4">Voir les spectacles disponibles</a>
+  </div>
+
+  <div *ngIf="show && !loading" class="detail-wrapper">
+    
+    <div class="show-hero-card">
+      <div class="hero-poster-container">
+        <img [src]="'assets/' + show.poster" [alt]="show.title" class="hero-poster">
+        <div class="badge-overlay">
+          <span class="status-tag" [class.available]="show.bookable" [class.soldout]="!show.bookable">
+            {{ show.bookable ? 'Disponible' : 'Complet' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="hero-info-container">
+        <h1 class="show-title">{{ show.title }}</h1>
+        
+        <div class="show-meta">
+          <span class="meta-item">🎭 Représentation Théâtrale</span>
+          <span class="meta-item">📍 Salle Principale</span>
+        </div>
+
+        <div class="description-box">
+          <h3>Description du Spectacle</h3>
+          <p>{{ show.description }}</p>
+        </div>
+
+        <div class="booking-banner">
+          <div class="price-box">
+            <span class="price-label">Tarif de la place</span>
+            <span class="price-amount">{{ show.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <div class="booking-status-indicator">
+            <span class="status-pill" [class.pill-active]="show.bookable" [class.pill-disabled]="!show.bookable">
+              {{ show.bookable ? '🎟️ Réservation ouverte en guichet' : 'Épuisé' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comments-section">
+      <div class="section-header">
+        <h2>💬 Avis & Commentaires ({{ comments.length }})</h2>
+      </div>
+
+      <div class="add-comment-card">
+        <h3>Laissez votre avis sur ce spectacle</h3>
+
+        <div *ngIf="authService.isLoggedIn$ | async; else loginToComment" class="comment-form">
+          <div class="rating-picker">
+            <span class="rating-label">Votre note :</span>
+            <div class="stars-select">
+              <span *ngFor="let star of [1,2,3,4,5]" 
+                    class="star-clickable" 
+                    [class.active]="star <= newRating" 
+                    (click)="setRating(star)">
+                ★
+              </span>
+            </div>
+            <span class="rating-num">({{ newRating }}/5)</span>
+          </div>
+
+          <div class="form-group">
+            <textarea class="form-control comment-input" 
+                      rows="3" 
+                      placeholder="Partagez vos impressions sur ce spectacle..." 
+                      [(ngModel)]="newCommentText"></textarea>
+          </div>
+
+          <button type="button" class="btn-primary btn-submit-comment" (click)="submitComment()" [disabled]="!newCommentText.trim()">
+            Publier mon commentaire
+          </button>
+        </div>
+
+        <ng-template #loginToComment>
+          <div class="login-prompt-box">
+            <span class="lock-icon">🔒</span>
+            <p>Vous devez être connecté à votre compte pour laisser un avis sur ce spectacle.</p>
+            <a routerLink="/login" class="btn-primary btn-login-prompt">Se connecter</a>
+          </div>
+        </ng-template>
+      </div>
+
+      <div *ngIf="comments.length === 0" class="no-comments-msg">
+        <p>Aucun avis n a encore été publié pour ce spectacle. Soyez le premier à donner votre avis !</p>
+      </div>
+
+      <div class="comments-list" *ngIf="comments.length > 0">
+        <div *ngFor="let comment of comments" class="comment-item">
+          <div class="comment-avatar">
+            {{ comment.author ? comment.author.charAt(0).toUpperCase() : 'U' }}
+          </div>
+          <div class="comment-content">
+            <div class="comment-header">
+              <span class="comment-author">{{ comment.author }}</span>
+              <span class="comment-date">{{ comment.date | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="comment-rating">
+              <span *ngFor="let s of getStarArray(comment.stars)" class="star-filled">★</span>
+              <span *ngFor="let s of getStarArray(5 - (comment.stars || 0))" class="star-empty">★</span>
+            </div>
+            <p class="comment-text">{{ comment.text }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

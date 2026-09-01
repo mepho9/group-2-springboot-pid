@@ -7,10 +7,11 @@ import { RegisterComponent } from './auth/register/register.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ShowListComponent } from './show-list/show-list.component';
+import { ShowDetailComponent } from './show-detail/show-detail.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [authGuard] },
+  { path: '', component: HomeComponent },
   { path: 'artists', component: ArtistListComponent, canActivate: [authGuard] },
   { path: 'artists/:id', component: ArtistDetailComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
@@ -18,5 +19,6 @@ export const routes: Routes = [
   { path: 'users', component: UserListComponent, canActivate: [authGuard] },
   { path: 'profile', component: UserProfileComponent, canActivate: [authGuard] },
   { path: 'show', component: ShowListComponent },
+  { path: 'shows/:id', component: ShowDetailComponent },
   { path: '**', redirectTo: '' }
 ];

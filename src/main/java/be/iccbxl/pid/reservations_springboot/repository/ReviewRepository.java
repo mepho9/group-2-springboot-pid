@@ -10,7 +10,5 @@ import be.iccbxl.pid.reservations_springboot.model.User;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByShow(Show show);
-    List<Review> findByShowAndValidatedTrue(Show show);
-    List<Review> findByValidatedFalse();
     boolean existsByUserAndShow(User user, Show show);
 }
