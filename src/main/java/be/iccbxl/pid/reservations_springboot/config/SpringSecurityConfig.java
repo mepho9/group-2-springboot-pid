@@ -80,7 +80,7 @@ public class SpringSecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/api/auth/**", "/api/users/register").permitAll()
 						.requestMatchers("/api/admin/**").hasRole("ADMIN")
-						.requestMatchers("/api/**").permitAll() // TEMPORARY: Allow all other API paths until full frontend is secured
+						.requestMatchers("/api/**").permitAll()
 				)
 				.sessionManagement(session ->
 						session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

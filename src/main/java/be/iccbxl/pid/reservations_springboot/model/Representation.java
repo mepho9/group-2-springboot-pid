@@ -30,7 +30,7 @@ public class Representation {
     /**
      * Date de la représentation
      */
-    @Column(name = "schedule")
+    @Column(name = "`when`")
     private LocalDateTime when;
 
     /**

@@ -103,10 +103,6 @@
               <span *ngIf="copiedShowId === item.id">✓ Copié</span>
               <span *ngIf="copiedShowId !== item.id">🔗 Partager</span>
             </button>
-
-            <button class="btn-book" [disabled]="!item.bookable">
-              {{ item.bookable ? 'Réserver' : 'Épuisé' }}
-            </button>
           </div>
         </div>
       </div>

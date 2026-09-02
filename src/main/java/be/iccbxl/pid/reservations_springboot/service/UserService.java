@@ -20,7 +20,11 @@ public class UserService {
 	private UserRepository userRepository;
 
 	@Autowired
+	private be.iccbxl.pid.reservations_springboot.repository.RoleRepository roleRepository;
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
+
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
@@ -41,7 +45,13 @@ public class UserService {
 		user.setEmail(dto.getEmail());
 		user.setLangue(dto.getLangue());
 		user.setPassword(passwordEncoder.encode(dto.getPassword()));
-		// user.setRole(UserRole.MEMBER); // TODO: Fix role assignment
+		be.iccbxl.pid.reservations_springboot.model.Role memberRole = roleRepository.findByRole("member");
+		if (memberRole == null) {
+			memberRole = roleRepository.findByRole("MEMBER");
+		}
+		if (memberRole != null) {
+			user.addRole(memberRole);
+		}
 		userRepository.save(user);
 	}
 

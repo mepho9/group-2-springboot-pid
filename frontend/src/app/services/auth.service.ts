@@ -32,6 +32,11 @@ export class AuthService {
     return this.currentUser.getValue();
   }
 
+  isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    return user ? user.toLowerCase() === 'admin' || user.toLowerCase().includes('admin') : false;
+  }
+
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: any) => {

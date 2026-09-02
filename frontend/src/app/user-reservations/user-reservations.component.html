@@ -1,0 +1,56 @@
+<div class="reservations-container fade-in">
+  <div class="header-section text-center">
+    <h1 class="page-title">🎟️ Mes Réservations</h1>
+    <p class="page-subtitle">Retrouvez l historique complet de vos réservations de spectacles</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement de vos réservations en cours...</p>
+  </div>
+
+  <div *ngIf="error && !loading" class="error-card">
+    <div class="error-icon">⚠️</div>
+    <h3>Erreur</h3>
+    <p>{{ error }}</p>
+    <a routerLink="/login" class="btn-primary mt-3">Se connecter</a>
+  </div>
+
+  <div *ngIf="!loading && !error && reservations.length === 0" class="empty-state">
+    <div class="empty-icon">🎟️</div>
+    <h3>Vous n avez aucune réservation pour le moment</h3>
+    <p>Découvrez notre programmation et réservez vos premières places !</p>
+    <a routerLink="/show" class="btn-primary mt-4">Découvrir les spectacles</a>
+  </div>
+
+  <div *ngIf="!loading && reservations.length > 0" class="reservations-grid">
+    <div *ngFor="let item of reservations" class="reservation-card">
+      <div class="card-media">
+        <img [src]="'assets/' + (item.showPoster || 'poster_theater.png')" [alt]="item.showTitle" class="poster-img">
+        <span class="status-badge" [class.confirmed]="item.status === 'CONFIRMEE' || item.status === 'CONFIRMED'">
+          {{ item.status === 'CONFIRMEE' || item.status === 'CONFIRMED' ? '✓ Confirmée' : item.status }}
+        </span>
+      </div>
+
+      <div class="card-details">
+        <h3 class="show-name">{{ item.showTitle || 'Spectacle Réservé' }}</h3>
+        
+        <div class="info-row">
+          <span class="info-label">Date de réservation :</span>
+          <span class="info-value">{{ item.bookingDate }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Montant :</span>
+          <span class="info-value price-tag">{{ (item.showPrice || 0) | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+
+        <div class="card-actions">
+          <a *ngIf="item.showId" [routerLink]="['/shows', item.showId]" class="btn-view-show">
+            Voir la fiche du spectacle →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

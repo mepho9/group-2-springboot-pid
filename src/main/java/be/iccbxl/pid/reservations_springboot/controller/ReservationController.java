@@ -119,16 +119,8 @@ public class ReservationController {
             return "redirect:/representations/" + representationId + "/reserve";
         }
 
-        Reservation reservation = new Reservation(user, LocalDateTime.now(), "PENDING");
+        Reservation reservation = new Reservation(user, representation, quantity);
         reservationRepository.save(reservation);
-
-        RepresentationReservation rr = new RepresentationReservation(
-                representation,
-                reservation,
-                price,
-                quantity
-        );
-        representationReservationRepository.save(rr);
 
         redirectAttributes.addFlashAttribute("success", "Réservation enregistrée avec succès.");
         return "redirect:/representations/" + representationId;
@@ -150,8 +142,7 @@ public class ReservationController {
             return "redirect:/reservations";
         }
 
-        reservation.setStatus("CANCELLED");
-        reservationRepository.save(reservation);
+        reservationRepository.delete(reservation);
 
         redirectAttributes.addFlashAttribute("success", "Réservation annulée avec succès.");
         return "redirect:/reservations";

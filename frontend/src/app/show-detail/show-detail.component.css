@@ -172,23 +172,37 @@
   color: #fff;
 }
 
-.status-pill {
-  padding: 0.75rem 1.25rem;
+.btn-book {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+  border: none;
+  padding: 0.8rem 1.75rem;
   border-radius: 12px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  transition: var(--transition);
 }
 
-.pill-active {
-  background: rgba(99, 102, 241, 0.2);
-  color: #a5b4fc;
-  border: 1px solid rgba(99, 102, 241, 0.4);
+.btn-book:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
 }
 
-.pill-disabled {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+.btn-book:disabled {
+  background: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-book.btn-reserved {
+  background: rgba(71, 85, 105, 0.5) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
 }
 
 .comments-section {

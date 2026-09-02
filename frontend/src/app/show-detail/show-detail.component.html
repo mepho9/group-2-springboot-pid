@@ -54,9 +54,15 @@
           </div>
 
           <div class="booking-status-indicator">
-            <span class="status-pill" [class.pill-active]="show.bookable" [class.pill-disabled]="!show.bookable">
-              {{ show.bookable ? '🎟️ Réservation ouverte en guichet' : 'Épuisé' }}
-            </span>
+            <button class="btn-book" 
+                    [class.btn-reserved]="isReserved" 
+                    [disabled]="!show.bookable || isReserved || reserving" 
+                    (click)="reserveShow()">
+              <span *ngIf="isReserved">✔ Déjà réservé</span>
+              <span *ngIf="!isReserved && show.bookable && !reserving">Réserver</span>
+              <span *ngIf="!isReserved && show.bookable && reserving">Réservation...</span>
+              <span *ngIf="!isReserved && !show.bookable">Épuisé</span>
+            </button>
           </div>
         </div>
       </div>

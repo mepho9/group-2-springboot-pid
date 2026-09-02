@@ -11,9 +11,8 @@ export function passwordMatchValidator(control: AbstractControl): ValidationErro
     control.get('confirmPassword')?.setErrors({ passwordMismatch: true });
     return { passwordMismatch: true };
   } else {
-    // Si l'erreur est uniquement passwordMismatch, on l'enlève
     const confirmControl = control.get('confirmPassword');
-    if (confirmControl?.hasError('passwordMismatch')) {
+    if (confirmControl && confirmControl.hasError('passwordMismatch')) {
       delete confirmControl.errors?.['passwordMismatch'];
       if (!Object.keys(confirmControl.errors || {}).length) {
         confirmControl.setErrors(null);
@@ -159,19 +158,16 @@ export class RegisterComponent {
         next: (response) => {
           console.log('Registration successful', response);
           this.isSubmitting = false;
-          // Optionally show a success toast here
           this.router.navigate(['/login']);
         },
         error: (err) => {
           console.error('Registration failed', err);
           this.isSubmitting = false;
           if (err.status === 400 && err.error && typeof err.error === 'object') {
-             // Handle validation errors from backend
-             // err.error est une Map (ex: { "login": "Le login est obligatoire", "password": "..." })
              for (const field in err.error) {
                if (this.registerForm.controls[field]) {
                  this.registerForm.controls[field].setErrors({ backendError: err.error[field] });
-               } else if (field === 'userRegistrationDto') { // Cas particulier @PasswordMatches appliqué à la classe globale
+               } else if (field === 'userRegistrationDto') {
                  this.errorMessage = err.error[field];
                }
              }

@@ -36,15 +36,54 @@ export class ShowDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private showService = inject(ShowService);
 
+  isReserved = false;
+  reserving = false;
+
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const id = +params['id'];
       if (id) {
         this.fetchShowDetail(id);
         this.fetchShowReviews(id);
+        this.checkReservationStatus(id);
       } else {
         this.error = 'Identifiant de spectacle invalide.';
         this.loading = false;
+      }
+    });
+  }
+
+  checkReservationStatus(showId: number): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return;
+    this.showService.checkUserReservation(currentUser, showId).subscribe({
+      next: (res) => {
+        this.isReserved = res.reserved;
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  reserveShow(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.showToast('🔒 Veuillez vous connecter pour réserver des places.');
+      return;
+    }
+
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !this.show) return;
+
+    this.reserving = true;
+    this.showService.createReservation(currentUser, this.show.id).subscribe({
+      next: () => {
+        this.isReserved = true;
+        this.reserving = false;
+        this.showToast('✅ Votre réservation a été enregistrée avec succès !');
+      },
+      error: (err) => {
+        console.error(err);
+        this.reserving = false;
+        this.showToast('⚠️ Erreur lors de la réservation.');
       }
     });
   }

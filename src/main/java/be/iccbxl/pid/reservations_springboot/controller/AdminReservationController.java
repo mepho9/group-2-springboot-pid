@@ -38,7 +38,6 @@ public class AdminReservationController {
             return "redirect:/admin/reservations";
         }
 
-        reservation.setStatus("CONFIRMED");
         reservationRepository.save(reservation);
 
         redirectAttributes.addFlashAttribute("success", "Réservation confirmée avec succès.");

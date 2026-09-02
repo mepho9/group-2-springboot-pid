@@ -16,12 +16,10 @@ export class ShowListComponent implements OnInit {
   show: Show[] = [];
   error: string | null = null;
 
-  // Search, Filter & Sort states
   searchQuery: string = '';
-  statusFilter: string = 'all'; // 'all' | 'available' | 'soldout'
-  sortBy: string = 'default';   // 'default' | 'title-asc' | 'title-desc' | 'price-asc' | 'price-desc'
+  statusFilter: string = 'all';
+  sortBy: string = 'default';
 
-  // Share & Notification states
   toastMessage: string | null = null;
   copiedShowId: number | null = null;
   highlightedShowId: number | null = null;
@@ -46,7 +44,6 @@ export class ShowListComponent implements OnInit {
     });
   }
 
-  // Check URL query parameter (?show=slug or ?show=id) on load
   checkQueryParam() {
     this.route.queryParams.subscribe(params => {
       const target = params['show'];
@@ -67,11 +64,9 @@ export class ShowListComponent implements OnInit {
     });
   }
 
-  // Getter computing search, filter, and sort
   get filteredShows(): Show[] {
     let result = [...this.show];
 
-    // 1. Search Query Filter
     if (this.searchQuery.trim()) {
       const q = this.searchQuery.toLowerCase().trim();
       result = result.filter(s =>
@@ -80,14 +75,12 @@ export class ShowListComponent implements OnInit {
       );
     }
 
-    // 2. Status Filter
     if (this.statusFilter === 'available') {
       result = result.filter(s => s.bookable);
     } else if (this.statusFilter === 'soldout') {
       result = result.filter(s => !s.bookable);
     }
 
-    // 3. Sorting
     switch (this.sortBy) {
       case 'title-asc':
         result.sort((a, b) => a.title.localeCompare(b.title));

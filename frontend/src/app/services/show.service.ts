@@ -17,6 +17,7 @@ export interface Show {
 })
 export class ShowService {
   private apiUrl = '/api/shows';
+  private reservationsUrl = '/api/reservations';
 
   constructor(private http: HttpClient) {}
 
@@ -34,5 +35,17 @@ export class ShowService {
 
   addShowReview(showId: number, reviewData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/${showId}/reviews`, reviewData);
+  }
+
+  getUserReservations(userLogin: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.reservationsUrl}?userLogin=${userLogin}`);
+  }
+
+  checkUserReservation(userLogin: string, showId: number): Observable<{ reserved: boolean }> {
+    return this.http.get<{ reserved: boolean }>(`${this.reservationsUrl}/check?userLogin=${userLogin}&showId=${showId}`);
+  }
+
+  createReservation(userLogin: string, showId: number): Observable<any> {
+    return this.http.post<any>(this.reservationsUrl, { userLogin, showId });
   }
 }

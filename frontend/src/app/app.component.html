@@ -1,10 +1,6 @@
 <div class="app-container">
   <nav class="navbar">
     <div class="nav-left">
-      <!-- Si non connecté : Bouton Connexion déplacé en haut à gauche -->
-      <a *ngIf="!(authService.isLoggedIn$ | async)" routerLink="/login" class="btn-login-left">
-        🔑 Connexion
-      </a>
       <div class="logo">
         <a routerLink="/" style="color: inherit; text-decoration: none;">🎭 TheaterBooking</a>
       </div>
@@ -13,12 +9,12 @@
     <ul class="nav-links">
       <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Accueil</a></li>
       <li><a routerLink="/show" routerLinkActive="active">Spectacles</a></li>
-      <li><a routerLink="/artists" routerLinkActive="active" *ngIf="authService.isLoggedIn$ | async">Artistes</a></li>
-      <li><a routerLink="/users" routerLinkActive="active" *ngIf="authService.isLoggedIn$ | async">Utilisateurs</a></li>
+      <li><a routerLink="/reservations" routerLinkActive="active" *ngIf="authService.isLoggedIn$ | async">Mes Réservations</a></li>
+      <li><a routerLink="/artists" routerLinkActive="active" *ngIf="authService.isAdmin()">Artistes</a></li>
+      <li><a routerLink="/users" routerLinkActive="active" *ngIf="authService.isAdmin()">Utilisateurs</a></li>
     </ul>
 
     <div class="user-profile">
-      <!-- Si connecté : Avatar & Déconnexion à droite -->
       <ng-container *ngIf="authService.isLoggedIn$ | async; else publicAuthRight">
         <a routerLink="/profile" class="user-avatar" style="text-decoration: none; cursor: pointer;">
           👤 {{ authService.currentUser$ | async }}
@@ -26,9 +22,8 @@
         <button class="btn-logout" (click)="logout()">Déconnexion</button>
       </ng-container>
 
-      <!-- Si non connecté : Bouton Inscription à droite -->
       <ng-template #publicAuthRight>
-        <a routerLink="/register" class="btn-primary" style="text-decoration: none;">Inscription</a>
+        <a routerLink="/login" class="btn-primary" style="text-decoration: none;">Connexion</a>
       </ng-template>
     </div>
   </nav>

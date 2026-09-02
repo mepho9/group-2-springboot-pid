@@ -33,7 +33,7 @@ export class UserProfileComponent implements OnInit {
       lastname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       langue: ['', Validators.required],
-      password: ['', [Validators.minLength(6)]], // Optionnel pour la mise à jour
+      password: ['', [Validators.minLength(6)]],
       confirmPassword: ['']
     }, { validators: passwordMatchValidator });
   }
@@ -79,7 +79,7 @@ export class UserProfileComponent implements OnInit {
     this.successMessage = '';
     this.error = '';
     if (!this.isEditing && this.user) {
-      this.initForm(this.user); // Réinitialise les champs si on annule
+      this.initForm(this.user);
     }
   }
 
@@ -103,11 +103,10 @@ export class UserProfileComponent implements OnInit {
       next: () => {
         this.isDeleting = false;
         this.showDeleteModal = false;
-        this.authService.logout(); // Cleans token/session and redirects to /login
+        this.authService.logout();
       },
       error: (err) => {
         console.error('Erreur lors de la suppression du compte:', err);
-        // Fallback demo for frontend-only mode if backend route differs
         this.isDeleting = false;
         this.showDeleteModal = false;
         this.authService.logout();
@@ -125,7 +124,6 @@ export class UserProfileComponent implements OnInit {
     const login = this.user.login;
     const updateData = { ...this.profileForm.value };
     
-    // Si le mot de passe est vide, on ne l'envoie pas
     if (!updateData.password) {
       delete updateData.password;
       delete updateData.confirmPassword;
@@ -135,7 +133,6 @@ export class UserProfileComponent implements OnInit {
       next: (response) => {
         this.successMessage = 'Profil mis à jour avec succès.';
         this.isEditing = false;
-        // On met à jour l'utilisateur local
         this.user = { ...this.user!, ...updateData };
         this.loading = false;
       },
